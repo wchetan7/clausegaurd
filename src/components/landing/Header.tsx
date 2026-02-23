@@ -1,0 +1,28 @@
+import { Shield } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface HeaderProps {
+  onStartTrial: () => void;
+}
+
+const Header = ({ onStartTrial }: HeaderProps) => {
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Shield className="h-7 w-7 text-primary" />
+          <span className="text-xl font-bold tracking-tight text-foreground">ClauseGuard</span>
+        </div>
+        <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+          <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
+          <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
+        </nav>
+        <Button onClick={onStartTrial} size="sm">
+          Start Free Trial
+        </Button>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
