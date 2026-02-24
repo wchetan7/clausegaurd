@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { FileText, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,7 @@ const riskColors: Record<string, string> = {
 };
 
 const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
+  const navigate = useNavigate();
   if (contracts.length === 0) {
     return (
       <div className="gradient-card rounded-xl border border-border/50 p-16 text-center shadow-card">
@@ -59,7 +61,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
           </thead>
           <tbody className="divide-y divide-border/30">
             {contracts.map((c) => (
-              <tr key={c.id} className="hover:bg-secondary/30 transition-colors">
+              <tr key={c.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => navigate(`/contract/${c.id}`)}>
                 <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
                 <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
                 <td className="px-5 py-4 text-sm text-muted-foreground">
