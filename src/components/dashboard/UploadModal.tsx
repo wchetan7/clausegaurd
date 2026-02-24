@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, FileText, Loader2, CheckCircle2 } from "lucide-react";
+import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,7 +15,21 @@ interface UploadModalProps {
   onSuccess: () => void;
 }
 
-type Stage = "form" | "scanning" | "success";
+type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
+
+async function extractPdfText(file: File): Promise<string> {
+  const pdfjsLib = await import("pdfjs-dist");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const pages: string[] = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    pages.push(content.items.map((item: any) => item.str).join(" "));
+  }
+  return pages.join("\n\n");
+}
 
 const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
@@ -23,7 +38,10 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
   const [value, setValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [contractId, setContractId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const reset = () => {
     setStage("form");
@@ -31,6 +49,8 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
     setVendor("");
     setValue("");
     setFile(null);
+    setContractId(null);
+    setErrorMsg("");
   };
 
   const handleClose = (val: boolean) => {
@@ -47,34 +67,74 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStage("scanning");
-
-    // Simulate AI scan for 3 seconds
-    await new Promise((r) => setTimeout(r, 3000));
-
-    const riskScores = ["Low", "Medium", "High"] as const;
-    const randomRisk = riskScores[Math.floor(Math.random() * 3)];
-    const renewalDate = new Date();
-    renewalDate.setMonth(renewalDate.getMonth() + Math.floor(Math.random() * 12) + 1);
-
-    const { error } = await supabase.from("contracts").insert({
-      user_id: userId,
-      name,
-      vendor,
-      contract_value: parseFloat(value) || 0,
-      risk_score: randomRisk,
-      status: "Reviewed",
-      renewal_date: renewalDate.toISOString().split("T")[0],
-    });
-
-    if (error) {
-      toast({ title: "Error saving contract", description: error.message, variant: "destructive" });
-      setStage("form");
+    if (!file) {
+      toast({ title: "Please select a PDF file", variant: "destructive" });
       return;
     }
 
-    setStage("success");
-    onSuccess();
+    try {
+      // Step 1: Create contract record
+      setStage("uploading");
+      const { data: inserted, error: insertErr } = await supabase.from("contracts").insert({
+        user_id: userId,
+        name,
+        vendor,
+        contract_value: parseFloat(value) || 0,
+        status: "Scanning",
+      }).select("id").single();
+
+      if (insertErr || !inserted) throw new Error(insertErr?.message || "Failed to create contract");
+      setContractId(inserted.id);
+
+      // Step 2: Extract PDF text
+      setStage("extracting");
+      const pdfText = await extractPdfText(file);
+
+      if (!pdfText.trim()) {
+        throw new Error("Could not extract text from PDF. The file may be image-based.");
+      }
+
+      // Step 3: Call AI analysis
+      setStage("analyzing");
+      const { data: session } = await supabase.auth.getSession();
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-contract`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.session?.access_token}`,
+        },
+        body: JSON.stringify({ contract_id: inserted.id, pdf_text: pdfText }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error || "Analysis failed");
+      }
+
+      setStage("success");
+      onSuccess();
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      setErrorMsg(err.message || "Something went wrong");
+      setStage("error");
+    }
+  };
+
+  const handleRetry = () => {
+    // If we have a contract ID, delete the failed record and retry
+    if (contractId) {
+      supabase.from("contracts").delete().eq("id", contractId).then(() => {
+        reset();
+      });
+    } else {
+      reset();
+    }
+  };
+
+  const stageLabels: Record<string, string> = {
+    uploading: "Creating contract record...",
+    extracting: "Extracting text from PDF...",
+    analyzing: "AI is analyzing your contract...",
   };
 
   return (
@@ -86,7 +146,6 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
               <DialogTitle className="text-xl font-bold">Upload Contract</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-              {/* Drop zone */}
               <div
                 onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={() => setDragOver(false)}
@@ -139,11 +198,28 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
           </>
         )}
 
-        {stage === "scanning" && (
+        {(stage === "uploading" || stage === "extracting" || stage === "analyzing") && (
           <div className="py-16 text-center">
             <Loader2 className="h-12 w-12 text-primary mx-auto mb-6 animate-spin" />
-            <h3 className="text-lg font-bold mb-2">AI is analyzing your contract...</h3>
-            <p className="text-sm text-muted-foreground">Scanning for risks, renewals, and hidden clauses</p>
+            <h3 className="text-lg font-bold mb-2">{stageLabels[stage]}</h3>
+            <p className="text-sm text-muted-foreground">
+              {stage === "analyzing"
+                ? "Scanning for risks, renewals, and hidden clauses"
+                : "This will only take a moment"}
+            </p>
+            <div className="flex justify-center gap-2 mt-6">
+              {["uploading", "extracting", "analyzing"].map((s) => (
+                <div
+                  key={s}
+                  className={`h-2 w-8 rounded-full transition-colors ${
+                    ["uploading", "extracting", "analyzing"].indexOf(stage) >=
+                    ["uploading", "extracting", "analyzing"].indexOf(s)
+                      ? "bg-primary"
+                      : "bg-border"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -152,7 +228,29 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
             <CheckCircle2 className="h-12 w-12 text-primary mx-auto mb-6" />
             <h3 className="text-lg font-bold mb-2">Contract Analyzed!</h3>
             <p className="text-sm text-muted-foreground mb-6">Your risk report is ready to view.</p>
-            <Button onClick={() => handleClose(false)}>View Dashboard</Button>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={() => handleClose(false)}>View Dashboard</Button>
+              {contractId && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleClose(false);
+                    navigate(`/contract/${contractId}`);
+                  }}
+                >
+                  View Report
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {stage === "error" && (
+          <div className="py-16 text-center">
+            <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-6" />
+            <h3 className="text-lg font-bold mb-2">Analysis Failed</h3>
+            <p className="text-sm text-muted-foreground mb-6">{errorMsg}</p>
+            <Button onClick={handleRetry}>Try Again</Button>
           </div>
         )}
       </DialogContent>

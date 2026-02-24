@@ -14,13 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      contract_clauses: {
+        Row: {
+          action_required: string | null
+          clause_type: string
+          contract_id: string
+          created_at: string
+          id: string
+          raw_text: string
+          severity: string
+          summary: string
+        }
+        Insert: {
+          action_required?: string | null
+          clause_type: string
+          contract_id: string
+          created_at?: string
+          id?: string
+          raw_text: string
+          severity?: string
+          summary: string
+        }
+        Update: {
+          action_required?: string | null
+          clause_type?: string
+          contract_id?: string
+          created_at?: string
+          id?: string
+          raw_text?: string
+          severity?: string
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_clauses_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
+          auto_renewal: boolean | null
           contract_value: number | null
           created_at: string
           file_url: string | null
           id: string
           name: string
+          notice_period_days: number | null
           renewal_date: string | null
           risk_score: string | null
           status: string | null
@@ -29,11 +72,13 @@ export type Database = {
           vendor: string
         }
         Insert: {
+          auto_renewal?: boolean | null
           contract_value?: number | null
           created_at?: string
           file_url?: string | null
           id?: string
           name: string
+          notice_period_days?: number | null
           renewal_date?: string | null
           risk_score?: string | null
           status?: string | null
@@ -42,11 +87,13 @@ export type Database = {
           vendor: string
         }
         Update: {
+          auto_renewal?: boolean | null
           contract_value?: number | null
           created_at?: string
           file_url?: string | null
           id?: string
           name?: string
+          notice_period_days?: number | null
           renewal_date?: string | null
           risk_score?: string | null
           status?: string | null
