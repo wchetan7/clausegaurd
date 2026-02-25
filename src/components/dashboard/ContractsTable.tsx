@@ -72,9 +72,16 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
                   )}
                 </td>
                 <td className="px-5 py-4">
-                  <Badge variant="outline" className={`text-xs ${riskColors[c.risk_score] || ""}`}>
-                    {c.risk_score}
-                  </Badge>
+                  {c.status === "Scanning" || c.status === "Analyzing" ? (
+                    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                      Scanning
+                    </span>
+                  ) : (
+                    <Badge variant="outline" className={`text-xs ${riskColors[c.risk_score] || ""}`}>
+                      {c.risk_score}
+                    </Badge>
+                  )}
                 </td>
                 <td className="px-5 py-4 text-sm text-muted-foreground">{c.status}</td>
                 <td className="px-5 py-4 text-sm font-mono">${(c.contract_value || 0).toLocaleString()}/yr</td>
