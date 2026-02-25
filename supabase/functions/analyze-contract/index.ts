@@ -177,14 +177,20 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
     if (severities.includes("HIGH")) overallRisk = "High";
     else if (severities.includes("MEDIUM")) overallRisk = "Medium";
 
+    // Derive auto_renewal from clauses as source of truth
+    const hasAutoRenewalClause = (analysis.clauses || []).some(
+      (c: any) => c.clause_type?.toLowerCase().includes("auto_renewal") || c.clause_type?.toLowerCase().includes("auto-renewal")
+    );
+
     // Update contract record
     const updates: any = {
       risk_score: overallRisk,
       status: "Analyzed",
+      auto_renewal: hasAutoRenewalClause ? true : (analysis.auto_renewal ?? false),
     };
     if (analysis.renewal_date) updates.renewal_date = analysis.renewal_date;
     if (analysis.notice_period_days != null) updates.notice_period_days = analysis.notice_period_days;
-    if (analysis.auto_renewal != null) updates.auto_renewal = analysis.auto_renewal;
+    if (analysis.contract_value != null) updates.contract_value = analysis.contract_value;
 
     await supabase.from("contracts").update(updates).eq("id", contract_id);
 

@@ -21,14 +21,14 @@ const SummaryCards = ({ contracts }: SummaryCardsProps) => {
   ).length;
   const highRisk = contracts.filter((c) => c.risk_score === "High").length;
   const mrrAtRisk = contracts
-    .filter((c) => c.risk_score === "High" || c.risk_score === "Medium")
-    .reduce((sum, c) => sum + (c.contract_value || 0), 0);
+    .filter((c) => c.risk_score === "High")
+    .reduce((sum, c) => sum + ((c.contract_value || 0) / 12), 0);
 
   const cards = [
     { label: "Total Contracts", value: total, icon: FileText, color: "text-primary" },
     { label: "Expiring in 30 Days", value: expiring, icon: AlertTriangle, color: "text-warning" },
     { label: "High Risk", value: highRisk, icon: ShieldAlert, color: "text-destructive" },
-    { label: "MRR at Risk", value: `$${mrrAtRisk.toLocaleString()}`, icon: DollarSign, color: "text-destructive" },
+    { label: "MRR at Risk", value: highRisk > 0 ? `$${Math.round(mrrAtRisk).toLocaleString()}` : "—", icon: DollarSign, color: "text-destructive" },
   ];
 
   return (
