@@ -49,6 +49,25 @@ const Dashboard = () => {
     if (user) fetchContracts();
   }, [user]);
 
+  // Realtime subscription for live dashboard updates
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("contracts-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "contracts" },
+        () => {
+          fetchContracts();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   if (!user || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
