@@ -93,6 +93,12 @@ const ContractAnalysis = () => {
     return (order[a.severity as keyof typeof order] ?? 3) - (order[b.severity as keyof typeof order] ?? 3);
   });
 
+  // Derive auto_renewal from clauses as source of truth
+  const hasAutoRenewalClause = clauses.some(
+    (c) => c.clause_type?.toLowerCase().includes("auto_renewal") || c.clause_type?.toLowerCase().includes("auto-renewal")
+  );
+  const effectiveAutoRenewal = hasAutoRenewalClause ? true : contract.auto_renewal;
+
   return (
     <div className="min-h-screen bg-background flex">
       <DashboardSidebar userEmail={user?.email} />
@@ -150,10 +156,10 @@ const ContractAnalysis = () => {
             </Card>
             <Card className="gradient-card border-border/50">
               <CardContent className="p-4 flex items-center gap-3">
-                <RefreshCw className={`h-5 w-5 ${contract.auto_renewal ? "text-destructive" : "text-primary"}`} />
+                <RefreshCw className={`h-5 w-5 ${effectiveAutoRenewal ? "text-destructive" : "text-primary"}`} />
                 <div>
                   <p className="text-xs text-muted-foreground">Auto-Renewal</p>
-                  <p className="font-bold">{contract.auto_renewal ? "Yes" : "No"}</p>
+                  <p className="font-bold">{effectiveAutoRenewal ? "Yes" : "No"}</p>
                 </div>
               </CardContent>
             </Card>
