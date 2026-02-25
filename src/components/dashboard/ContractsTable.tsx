@@ -64,8 +64,12 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
               <tr key={c.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => navigate(`/contract/${c.id}`)}>
                 <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
                 <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
-                <td className="px-5 py-4 text-sm text-muted-foreground">
-                  {c.renewal_date ? format(new Date(c.renewal_date), "MMM d, yyyy") : "—"}
+                <td className="px-5 py-4 text-sm">
+                  {c.renewal_date ? (
+                    <span className="text-muted-foreground">{format(new Date(c.renewal_date), "MMM d, yyyy")}</span>
+                  ) : (
+                    <span className="text-warning font-medium">Check contract</span>
+                  )}
                 </td>
                 <td className="px-5 py-4">
                   <Badge variant="outline" className={`text-xs ${riskColors[c.risk_score] || ""}`}>
