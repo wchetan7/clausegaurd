@@ -62,7 +62,12 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
-    const systemPrompt = `You are a contract analysis expert. Extract key clauses from vendor contracts and return structured JSON. Focus on: auto-renewal terms, price escalation clauses, termination fees, payment terms, liability limitations, IP ownership, data privacy terms. For each clause: classify it, summarize in plain English (max 2 sentences), quote the exact text from the contract, and rate severity as LOW/MEDIUM/HIGH. Also extract: renewal_date (ISO date string or null), notice_period_days (integer or null), contract_value (number or null), auto_renewal (boolean). Return only valid JSON.`;
+    const systemPrompt = `You are a contract analysis expert. Extract key clauses from vendor contracts and return structured JSON. Focus on: auto-renewal terms, price escalation clauses, termination fees, payment terms, liability limitations, IP ownership, data privacy terms. For each clause: classify it (use snake_case like "auto_renewal", "price_escalation", "termination_fee", "payment_terms", "liability_limitation", "ip_ownership", "data_privacy"), summarize in plain English (max 2 sentences), quote the exact text from the contract, and rate severity as LOW/MEDIUM/HIGH. Also extract these metadata fields by cross-referencing the clauses you found:
+- auto_renewal: SET TO TRUE if you found ANY auto-renewal clause. Only set false if the contract explicitly states no auto-renewal. If auto-renewal clause severity is HIGH or MEDIUM, auto_renewal MUST be true.
+- renewal_date: extract the actual date as ISO string (e.g. "2027-04-30"), or calculate from term start + duration if not stated explicitly. Never return null if dates are mentioned anywhere.
+- notice_period_days: extract the number of days (e.g. 60), look inside auto-renewal and termination clauses for cancellation notice requirements.
+- contract_value: annual total in USD as a number. Calculate from monthly/quarterly amounts if needed. Never return null if any pricing is mentioned.
+IMPORTANT: The clauses array is the source of truth. Metadata fields must be consistent with extracted clauses. Never return null/N/A if a relevant clause exists. Return only valid JSON.`;
 
     const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
