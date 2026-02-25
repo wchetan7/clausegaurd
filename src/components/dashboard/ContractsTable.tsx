@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Upload } from "lucide-react";
+import { FileText, Upload, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Contract {
   id: string;
@@ -19,6 +21,16 @@ interface ContractsTableProps {
   onUpload: () => void;
 }
 
+const statusConfig: Record<string, { label: string; className: string; pulse?: boolean }> = {
+  queued: { label: "Queued", className: "bg-muted/40 text-muted-foreground border-border" },
+  scanning: { label: "Extracting text...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
+  extracting: { label: "Extracting text...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
+  analyzing: { label: "AI analyzing...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
+  saving: { label: "Saving results...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
+  analyzed: { label: "Analyzed", className: "bg-primary/20 text-primary border-primary/30" },
+  failed: { label: "Failed", className: "bg-destructive/20 text-destructive border-destructive/30" },
+};
+
 const riskColors: Record<string, string> = {
   Low: "bg-primary/20 text-primary border-primary/30",
   Medium: "bg-warning/20 text-warning border-warning/30",
@@ -27,6 +39,24 @@ const riskColors: Record<string, string> = {
 
 const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleRetry = async (e: React.MouseEvent, contractId: string) => {
+    e.stopPropagation();
+    const { error } = await supabase.from("contracts").update({ status: "queued", risk_score: null }).eq("id", contractId);
+    if (error) {
+      toast({ title: "Failed to queue retry", variant: "destructive" });
+    } else {
+      toast({ title: "Contract queued for re-analysis" });
+    }
+  };
+
+  const getQueuePosition = (contractId: string) => {
+    const queued = contracts.filter((c) => c.status === "queued");
+    const idx = queued.findIndex((c) => c.id === contractId);
+    return idx >= 0 ? idx + 1 : null;
+  };
+
   if (contracts.length === 0) {
     return (
       <div className="gradient-card rounded-xl border border-border/50 p-16 text-center shadow-card">
@@ -45,6 +75,9 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
     );
   }
 
+  const isProcessing = (status: string) =>
+    ["queued", "scanning", "extracting", "analyzing", "saving"].includes(status?.toLowerCase());
+
   return (
     <div className="gradient-card rounded-xl border border-border/50 shadow-card overflow-hidden">
       <div className="overflow-x-auto">
@@ -60,33 +93,63 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/30">
-            {contracts.map((c) => (
-              <tr key={c.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => navigate(`/contract/${c.id}`)}>
-                <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
-                <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
-                <td className="px-5 py-4 text-sm">
-                  {c.renewal_date ? (
-                    <span className="text-muted-foreground">{format(new Date(c.renewal_date), "MMM d, yyyy")}</span>
-                  ) : (
-                    <span className="text-warning font-medium">Check contract</span>
-                  )}
-                </td>
-                <td className="px-5 py-4">
-                  {c.status === "Scanning" || c.status === "Analyzing" ? (
-                    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-                      Scanning
-                    </span>
-                  ) : (
-                    <Badge variant="outline" className={`text-xs ${riskColors[c.risk_score] || ""}`}>
-                      {c.risk_score}
-                    </Badge>
-                  )}
-                </td>
-                <td className="px-5 py-4 text-sm text-muted-foreground">{c.status}</td>
-                <td className="px-5 py-4 text-sm font-mono">${(c.contract_value || 0).toLocaleString()}/yr</td>
-              </tr>
-            ))}
+            {contracts.map((c) => {
+              const status = c.status?.toLowerCase() || "";
+              const config = statusConfig[status] || statusConfig.queued;
+              const queuePos = status === "queued" ? getQueuePosition(c.id) : null;
+
+              return (
+                <tr key={c.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => navigate(`/contract/${c.id}`)}>
+                  <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
+                  <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
+                  <td className="px-5 py-4 text-sm">
+                    {c.renewal_date ? (
+                      <span className="text-muted-foreground">{format(new Date(c.renewal_date), "MMM d, yyyy")}</span>
+                    ) : (
+                      <span className="text-warning font-medium">Check contract</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-4">
+                    {isProcessing(status) ? (
+                      <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
+                        {config.label}
+                      </span>
+                    ) : status === "failed" ? (
+                      <Badge variant="outline" className="text-xs bg-destructive/20 text-destructive border-destructive/30">
+                        Unknown
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className={`text-xs ${riskColors[c.risk_score] || ""}`}>
+                        {c.risk_score || "—"}
+                      </Badge>
+                    )}
+                  </td>
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={`text-xs ${config.className} ${config.pulse ? "animate-pulse" : ""}`}
+                      >
+                        {status === "queued" && queuePos ? `Position ${queuePos} in queue` : config.label}
+                      </Badge>
+                      {status === "failed" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 px-2 text-xs text-destructive hover:text-destructive"
+                          onClick={(e) => handleRetry(e, c.id)}
+                        >
+                          <RotateCcw className="h-3 w-3 mr-1" />
+                          Retry
+                        </Button>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-5 py-4 text-sm font-mono">${(c.contract_value || 0).toLocaleString()}/yr</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
