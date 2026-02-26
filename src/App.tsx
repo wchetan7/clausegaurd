@@ -6,7 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import ContractAnalysis from "./pages/ContractAnalysis";
+import Reminders from "./pages/Reminders";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import AuthenticatedLayout from "./components/layouts/AuthenticatedLayout";
 
 const queryClient = new QueryClient();
 
@@ -18,8 +21,12 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/contracts/:id" element={<ContractAnalysis />} />
+          <Route element={<AuthenticatedLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/contracts/:id" element={<ContractAnalysis />} />
+            <Route path="/reminders" element={<Reminders />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
