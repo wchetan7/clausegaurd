@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: FileText, label: "My Contracts" },
-  { icon: Bell, label: "Reminders" },
-  { icon: Settings, label: "Settings" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: FileText, label: "My Contracts", path: "/dashboard" },
+  { icon: Bell, label: "Reminders", path: "/reminders" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 interface DashboardSidebarProps {
   userEmail?: string;
+  currentPath?: string;
 }
 
-const DashboardSidebar = ({ userEmail }: DashboardSidebarProps) => {
+const DashboardSidebar = ({ userEmail, currentPath = "/dashboard" }: DashboardSidebarProps) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -32,20 +33,24 @@ const DashboardSidebar = ({ userEmail }: DashboardSidebarProps) => {
       </div>
 
       <nav className="flex-1 p-3 space-y-1">
-        {navItems.map((item) => (
-          <button
-            key={item.label}
-            className={cn(
-              "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              item.active
-                ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-            )}
-          >
-            <item.icon className="h-4 w-4" />
-            {item.label}
-          </button>
-        ))}
+        {navItems.map((item) => {
+          const isActive = currentPath === item.path || (item.path !== "/dashboard" && currentPath.startsWith(item.path));
+          return (
+            <button
+              key={item.label}
+              onClick={() => navigate(item.path)}
+              className={cn(
+                "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
       <div className="p-4 border-t border-sidebar-border">

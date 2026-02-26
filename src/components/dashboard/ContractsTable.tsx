@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FileText, Upload, RotateCcw } from "lucide-react";
+import { FileText, Upload, RotateCcw, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -90,6 +90,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Risk</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Value</th>
+              <th className="w-10"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/30">
@@ -98,8 +99,18 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
               const config = statusConfig[status] || statusConfig.queued;
               const queuePos = status === "queued" ? getQueuePosition(c.id) : null;
 
+              const handleRowClick = () => {
+                if (status === "analyzed") {
+                  navigate(`/contracts/${c.id}`);
+                } else if (status === "failed") {
+                  toast({ title: "Analysis failed — click Retry to reprocess", variant: "destructive" });
+                } else {
+                  toast({ title: "Still analyzing — check back soon" });
+                }
+              };
+
               return (
-                <tr key={c.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => navigate(`/contract/${c.id}`)}>
+                <tr key={c.id} className="group hover:bg-secondary/30 transition-colors cursor-pointer" onClick={handleRowClick}>
                   <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
                   <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
                   <td className="px-5 py-4 text-sm">
@@ -147,6 +158,9 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
                     </div>
                   </td>
                   <td className="px-5 py-4 text-sm font-mono">${(c.contract_value || 0).toLocaleString()}/yr</td>
+                  <td className="px-3 py-4">
+                    <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </td>
                 </tr>
               );
             })}

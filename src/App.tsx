@@ -19,7 +19,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/contract/:id" element={<ContractAnalysis />} />
+          <Route path="/contracts/:id" element={<ContractAnalysis />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
