@@ -103,6 +103,80 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          id: string
+          plan: string
+          plan_limit: number
+          stripe_customer_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          plan_limit?: number
+          stripe_customer_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          plan_limit?: number
+          stripe_customer_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reminders: {
+        Row: {
+          contract_id: string
+          created_at: string
+          dismissed: boolean
+          id: string
+          reminder_date: string
+          snoozed_until: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          contract_id: string
+          created_at?: string
+          dismissed?: boolean
+          id?: string
+          reminder_date: string
+          snoozed_until?: string | null
+          type?: string
+          user_id: string
+        }
+        Update: {
+          contract_id?: string
+          created_at?: string
+          dismissed?: boolean
+          id?: string
+          reminder_date?: string
+          snoozed_until?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
