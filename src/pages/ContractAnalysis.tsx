@@ -101,11 +101,11 @@ const ContractAnalysis = () => {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <DashboardSidebar userEmail={user?.email} />
+      <DashboardSidebar userEmail={user?.email} currentPath="/contracts" />
       <main className="flex-1 p-6 lg:p-8 overflow-auto">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Back button */}
-          <Button variant="ghost" onClick={() => navigate("/dashboard")} className="gap-2">
+          <Button variant="ghost" onClick={() => navigate("/dashboard", { replace: true })} className="gap-2">
             <ArrowLeft className="h-4 w-4" /> Back to Dashboard
           </Button>
 
