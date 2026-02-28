@@ -2,3 +2,6 @@ project_id = "uldnipuxguytidmgxwhi"
 
 [functions.analyze-contract]
 verify_jwt = false
+
+[functions.get-expiring-contracts]
+verify_jwt = false
