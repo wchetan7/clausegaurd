@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
 
   const today = new Date();
   const thirtyDaysOut = new Date(today);
-  thirtyDaysOut.setDate(today.getDate() + 30);
+  thirtyDaysOut.setDate(today.getDate() + 365);
 
   const { data: contracts, error } = await supabase
     .from("contracts")
