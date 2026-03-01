@@ -67,7 +67,7 @@ serve(async (req) => {
     }
 
     // Update status to scanning
-    await serviceClient.from("contracts").update({ status: "scanning" }).eq("id", contract_id);
+    await serviceClient.from("contracts").update({ status: "Scanning" }).eq("id", contract_id);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
@@ -138,7 +138,7 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
     } catch (abortErr) {
       // Timeout hit
       console.error("AI call timed out after 25s");
-      await serviceClient.from("contracts").update({ status: "failed", risk_score: "Unknown" }).eq("id", contract_id);
+      await serviceClient.from("contracts").update({ status: "Action Required" }).eq("id", contract_id);
       return new Response(JSON.stringify({ error: "AI analysis timed out. Please retry." }), {
         status: 504,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -152,21 +152,21 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
       console.error("AI gateway error:", aiResponse.status, errText);
 
       if (aiResponse.status === 429) {
-        await serviceClient.from("contracts").update({ status: "failed", risk_score: "Unknown" }).eq("id", contract_id);
+        await serviceClient.from("contracts").update({ status: "Action Required" }).eq("id", contract_id);
         return new Response(JSON.stringify({ error: "Rate limit exceeded, please try again later." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (aiResponse.status === 402) {
-        await serviceClient.from("contracts").update({ status: "failed", risk_score: "Unknown" }).eq("id", contract_id);
+        await serviceClient.from("contracts").update({ status: "Action Required" }).eq("id", contract_id);
         return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      await serviceClient.from("contracts").update({ status: "failed", risk_score: "Unknown" }).eq("id", contract_id);
+      await serviceClient.from("contracts").update({ status: "Action Required" }).eq("id", contract_id);
       return new Response(JSON.stringify({ error: "AI analysis failed" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -176,7 +176,7 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
     const aiData = await aiResponse.json();
     const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
     if (!toolCall) {
-      await serviceClient.from("contracts").update({ status: "failed", risk_score: "Unknown" }).eq("id", contract_id);
+      await serviceClient.from("contracts").update({ status: "Action Required" }).eq("id", contract_id);
       return new Response(JSON.stringify({ error: "AI returned no analysis" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -214,7 +214,7 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
     // SUCCESS: Update contract record AFTER clauses are saved
     const updates: any = {
       risk_score: riskScore,
-      status: "analyzed",
+      status: "Reviewed",
       auto_renewal: hasAutoRenewalClause ? true : (analysis.auto_renewal ?? false),
     };
     if (analysis.renewal_date) updates.renewal_date = analysis.renewal_date;
@@ -231,7 +231,7 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
 
     // FAILURE: Always mark as failed so it never stays stuck on scanning
     if (contractId) {
-      await serviceClient.from("contracts").update({ status: "failed", risk_score: "Unknown" }).eq("id", contractId);
+      await serviceClient.from("contracts").update({ status: "Action Required" }).eq("id", contractId);
     }
 
     return new Response(

@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
   const { data: contracts, error } = await supabase
     .from("contracts")
     .select("id, name, vendor, renewal_date, contract_value, notice_period_days, user_id")
-    .eq("status", "analyzed")
+    .eq("status", "Reviewed")
     .eq("auto_renewal", true)
     .gte("renewal_date", today.toISOString().split("T")[0])
     .lte("renewal_date", thirtyDaysOut.toISOString().split("T")[0]);
