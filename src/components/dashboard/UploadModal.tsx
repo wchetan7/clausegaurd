@@ -80,7 +80,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
         name,
         vendor,
         contract_value: parseFloat(value) || 0,
-        status: "queued",
+        status: "Scanning",
       }).select("id").single();
 
       if (insertErr || !inserted) throw new Error(insertErr?.message || "Failed to create contract");
