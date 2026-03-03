@@ -12,6 +12,7 @@ import {
   Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert,
 } from "lucide-react";
 import { format } from "date-fns";
+import { exportContractPdf } from "@/lib/exportContractPdf";
 
 const severityConfig: Record<string, { color: string; icon: string; badgeClass: string }> = {
   HIGH: { color: "text-destructive", icon: "🔴", badgeClass: "bg-destructive/20 text-destructive border-destructive/30" },
@@ -188,7 +189,7 @@ const ContractAnalysis = () => {
       </Card>
 
       <div className="flex gap-3">
-        <Button variant="outline" className="gap-2"><Download className="h-4 w-4" /> Download Report PDF</Button>
+        <Button variant="outline" className="gap-2" onClick={() => exportContractPdf(contract, clauses)}><Download className="h-4 w-4" /> Download Report PDF</Button>
         <Button variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Share with Team</Button>
       </div>
     </div>
