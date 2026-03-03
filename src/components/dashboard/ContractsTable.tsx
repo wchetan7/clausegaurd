@@ -22,13 +22,10 @@ interface ContractsTableProps {
 }
 
 const statusConfig: Record<string, { label: string; className: string; pulse?: boolean }> = {
-  queued: { label: "Queued", className: "bg-muted/40 text-muted-foreground border-border" },
-  scanning: { label: "Extracting text...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
-  extracting: { label: "Extracting text...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
-  analyzing: { label: "AI analyzing...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
-  saving: { label: "Saving results...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
-  analyzed: { label: "Analyzed", className: "bg-primary/20 text-primary border-primary/30" },
-  failed: { label: "Failed", className: "bg-destructive/20 text-destructive border-destructive/30" },
+  Scanning: { label: "Scanning...", className: "bg-blue-500/20 text-blue-400 border-blue-500/30", pulse: true },
+  Reviewed: { label: "Reviewed", className: "bg-primary/20 text-primary border-primary/30" },
+  "Action Required": { label: "Action Required", className: "bg-destructive/20 text-destructive border-destructive/30" },
+  Archived: { label: "Archived", className: "bg-muted/40 text-muted-foreground border-border" },
 };
 
 const riskColors: Record<string, string> = {
@@ -43,7 +40,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
 
   const handleRetry = async (e: React.MouseEvent, contractId: string) => {
     e.stopPropagation();
-    const { error } = await supabase.from("contracts").update({ status: "queued", risk_score: null }).eq("id", contractId);
+    const { error } = await supabase.from("contracts").update({ status: "Scanning", risk_score: null }).eq("id", contractId);
     if (error) {
       toast({ title: "Failed to queue retry", variant: "destructive" });
     } else {
@@ -52,7 +49,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
   };
 
   const getQueuePosition = (contractId: string) => {
-    const queued = contracts.filter((c) => c.status === "queued");
+    const queued = contracts.filter((c) => c.status === "Scanning");
     const idx = queued.findIndex((c) => c.id === contractId);
     return idx >= 0 ? idx + 1 : null;
   };
@@ -75,8 +72,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
     );
   }
 
-  const isProcessing = (status: string) =>
-    ["queued", "scanning", "extracting", "analyzing", "saving"].includes(status?.toLowerCase());
+  const isProcessing = (status: string) => status === "Scanning";
 
   return (
     <div className="gradient-card rounded-xl border border-border/50 shadow-card overflow-hidden">
@@ -95,16 +91,16 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
           </thead>
           <tbody className="divide-y divide-border/30">
             {contracts.map((c) => {
-              const status = c.status?.toLowerCase() || "";
-              const config = statusConfig[status] || statusConfig.queued;
-              const queuePos = status === "queued" ? getQueuePosition(c.id) : null;
+              const status = c.status || "";
+              const config = statusConfig[status] || { label: status, className: "bg-muted/40 text-muted-foreground border-border" };
+              const queuePos = status === "Scanning" ? getQueuePosition(c.id) : null;
 
               const handleRowClick = () => {
-                if (status === "analyzed") {
+                if (status === "Reviewed") {
                   navigate(`/contracts/${c.id}`);
-                } else if (status === "failed") {
-                  toast({ title: "Analysis failed — click Retry to reprocess", variant: "destructive" });
-                } else {
+                } else if (status === "Action Required") {
+                  toast({ title: "Analysis had issues — click Retry to reprocess", variant: "destructive" });
+                } else if (status === "Scanning") {
                   toast({ title: "Still analyzing — check back soon" });
                 }
               };
@@ -124,11 +120,11 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
                     {isProcessing(status) ? (
                       <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                         <span className="h-3 w-3 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-                        {config.label}
+                        Scanning
                       </span>
-                    ) : status === "failed" ? (
+                    ) : status === "Action Required" ? (
                       <Badge variant="outline" className="text-xs bg-destructive/20 text-destructive border-destructive/30">
-                        Unknown
+                        Needs Review
                       </Badge>
                     ) : (
                       <Badge variant="outline" className={`text-xs ${riskColors[c.risk_score] || ""}`}>
@@ -142,9 +138,9 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
                         variant="outline"
                         className={`text-xs ${config.className} ${config.pulse ? "animate-pulse" : ""}`}
                       >
-                        {status === "queued" && queuePos ? `Position ${queuePos} in queue` : config.label}
+                        {status === "Scanning" && queuePos ? `Position ${queuePos} in queue` : config.label}
                       </Badge>
-                      {status === "failed" && (
+                      {status === "Action Required" && (
                         <Button
                           size="sm"
                           variant="ghost"
