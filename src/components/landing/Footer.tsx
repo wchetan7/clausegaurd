@@ -13,8 +13,8 @@ const Footer = () => {
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
             <Link to="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link to="/blog" className="hover:text-foreground transition-colors">Blog</Link>
             <a href="#" className="hover:text-foreground transition-colors">Support</a>
-            <a href="#" className="hover:text-foreground transition-colors">Blog</a>
           </div>
           <p className="text-xs text-muted-foreground">© 2026 ClauseGuard. All rights reserved.</p>
         </div>

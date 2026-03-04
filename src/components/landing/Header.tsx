@@ -16,6 +16,7 @@ const Header = ({ onStartTrial }: HeaderProps) => {
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
           <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
+          <a href="/blog" className="hover:text-foreground transition-colors">Blog</a>
         </nav>
         <Button onClick={onStartTrial} size="sm">
           Start Free Trial
