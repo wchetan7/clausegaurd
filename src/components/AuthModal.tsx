@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, Loader2 } from "lucide-react";
+import { Shield, Loader2, Check, X } from "lucide-react";
+
+const getPasswordStrength = (password: string) => {
+  const checks = {
+    minLength: password.length >= 8,
+    hasUppercase: /[A-Z]/.test(password),
+    hasNumber: /\d/.test(password),
+  };
+  const passed = Object.values(checks).filter(Boolean).length;
+  const score = Math.round((passed / 3) * 100);
+  const label = score <= 33 ? "Weak" : score <= 66 ? "Fair" : "Strong";
+  const color = score <= 33 ? "bg-destructive" : score <= 66 ? "bg-yellow-500" : "bg-green-500";
+  return { checks, score, label, color };
+};
 
 interface AuthModalProps {
   open: boolean;
@@ -21,8 +35,14 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const strength = useMemo(() => getPasswordStrength(password), [password]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLogin && strength.score < 100) {
+      toast({ title: "Weak password", description: "Password must be 8+ chars with an uppercase letter and a number.", variant: "destructive" });
+      return;
+    }
     setLoading(true);
     try {
       if (isLogin) {
@@ -83,8 +103,26 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={isLogin ? 6 : 8}
             />
+            {!isLogin && password.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
+                    <div className={`h-full transition-all ${strength.color}`} style={{ width: `${strength.score}%` }} />
+                  </div>
+                  <span className="text-xs font-medium text-muted-foreground">{strength.label}</span>
+                </div>
+                <ul className="space-y-1 text-xs">
+                  {([["minLength", "At least 8 characters"], ["hasUppercase", "One uppercase letter"], ["hasNumber", "One number"]] as const).map(([key, label]) => (
+                    <li key={key} className="flex items-center gap-1.5">
+                      {strength.checks[key] ? <Check className="h-3 w-3 text-green-500" /> : <X className="h-3 w-3 text-muted-foreground" />}
+                      <span className={strength.checks[key] ? "text-foreground" : "text-muted-foreground"}>{label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
