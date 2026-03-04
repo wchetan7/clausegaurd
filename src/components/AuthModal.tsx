@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Loader2, Check, X } from "lucide-react";
@@ -32,6 +32,7 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -124,7 +125,22 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               </div>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          {!isLogin && (
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id="terms"
+                checked={agreedToTerms}
+                onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+              />
+              <label htmlFor="terms" className="text-xs text-muted-foreground leading-tight cursor-pointer">
+                I agree to the{" "}
+                <Link to="/terms-of-service" className="text-primary hover:underline" target="_blank">Terms of Service</Link>
+                {" "}and{" "}
+                <Link to="/privacy-policy" className="text-primary hover:underline" target="_blank">Privacy Policy</Link>
+              </label>
+            </div>
+          )}
+          <Button type="submit" className="w-full" disabled={loading || (!isLogin && !agreedToTerms)}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLogin ? "Sign In" : "Create Account"}
           </Button>
