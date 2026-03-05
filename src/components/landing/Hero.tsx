@@ -14,7 +14,7 @@ const Hero = ({ onStartTrial }: HeroProps) => {
       <div className="container relative text-center max-w-4xl mx-auto">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary mb-8 animate-fade-in">
           <ShieldCheck className="h-4 w-4" />
-          AI-Powered Contract Protection
+          The Wise Eye on Your Vendor Contracts
         </div>
         
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-6 animate-slide-up">

@@ -127,7 +127,7 @@ export function exportContractPdf(contract: ContractData, clauses: ClauseData[])
     doc.setFontSize(8);
     doc.setTextColor(150);
     doc.text(
-      `ClauseGuard — Page ${i} of ${pageCount}`,
+      `ContractOwl — Page ${i} of ${pageCount}`,
       pageWidth / 2,
       doc.internal.pageSize.getHeight() - 10,
       { align: "center" }

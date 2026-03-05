@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Clock, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/landing/Footer";
@@ -7,9 +7,9 @@ import Footer from "@/components/landing/Footer";
 const blogPosts = [
   {
     slug: "how-clauseguard-works",
-    title: "How ClauseGuard Protects Small Businesses from Bad Contracts",
+    title: "How ContractOwl Protects Small Businesses from Bad Contracts",
     description:
-      "Auto-renewals, hidden fees, termination traps — learn how ClauseGuard's AI scanner catches dangerous clauses before you sign.",
+      "Auto-renewals, hidden fees, termination traps — learn how ContractOwl's AI scanner catches dangerous clauses before you sign.",
     readTime: "5 min read",
     date: new Date().toLocaleDateString("en-US", {
       year: "numeric",
@@ -25,8 +25,8 @@ const Blog = () => {
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <Shield className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold tracking-tight text-foreground">ClauseGuard</span>
+            <img src="/logo-owl.png" alt="ContractOwl" className="h-7 w-7" />
+            <span className="text-xl font-bold tracking-tight text-foreground">ContractOwl</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <Link to="/blog" className="text-foreground font-medium">Blog</Link>
@@ -40,7 +40,7 @@ const Blog = () => {
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-black mb-4">
-              ClauseGuard <span className="text-gradient">Blog</span>
+              ContractOwl <span className="text-gradient">Blog</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
               Guides and insights for small business owners

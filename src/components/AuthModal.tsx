@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, Loader2, Check, X } from "lucide-react";
+import { Loader2, Check, X } from "lucide-react";
 
 const getPasswordStrength = (password: string) => {
   const checks = {
@@ -73,7 +73,7 @@ const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
       <DialogContent className="sm:max-w-md bg-card border-border">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-2">
-            <Shield className="h-6 w-6 text-primary" />
+            <img src="/logo-owl.png" alt="ContractOwl" className="h-6 w-6" />
             <DialogTitle className="text-xl font-bold">
               {isLogin ? "Welcome Back" : "Start Your Free Trial"}
             </DialogTitle>

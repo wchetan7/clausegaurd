@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, Bell, Settings, LogOut, Shield } from "lucide-react";
+import { LayoutDashboard, FileText, Bell, Settings, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -27,8 +27,8 @@ const DashboardSidebar = ({ userEmail, currentPath = "/dashboard" }: DashboardSi
     <aside className="w-64 min-h-screen border-r border-border bg-sidebar flex flex-col">
       <div className="p-5 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
-          <Shield className="h-6 w-6 text-sidebar-primary" />
-          <span className="text-lg font-bold text-sidebar-foreground">ClauseGuard</span>
+          <img src="/logo-owl.png" alt="ContractOwl" className="h-6 w-6" />
+          <span className="text-lg font-bold text-sidebar-foreground">ContractOwl</span>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { Shield, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "@/components/landing/Footer";
 
@@ -8,8 +8,8 @@ const TermsOfService = () => {
       <header className="border-b border-border/50 py-4">
         <div className="container flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Shield className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">ClauseGuard</span>
+            <img src="/logo-owl.png" alt="ContractOwl" className="h-6 w-6" />
+            <span className="text-xl font-bold">ContractOwl</span>
           </Link>
         </div>
       </header>
@@ -24,21 +24,21 @@ const TermsOfService = () => {
             <h2 className="text-lg font-bold text-destructive">Important Disclaimer</h2>
           </div>
           <p className="text-sm font-medium text-destructive">
-            ClauseGuard is NOT legal advice. Our AI-powered analysis is intended to assist with contract review but does not replace professional legal counsel. You should always consult a qualified lawyer before signing any contract. ClauseGuard and its operators accept no liability for decisions made based on our analysis.
+            ContractOwl is NOT legal advice. Our AI-powered analysis is intended to assist with contract review but does not replace professional legal counsel. You should always consult a qualified lawyer before signing any contract. ContractOwl and its operators accept no liability for decisions made based on our analysis.
           </p>
         </div>
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Acceptance of Terms</h2>
           <p className="text-muted-foreground">
-            By accessing or using ClauseGuard, you agree to be bound by these Terms of Service. If you do not agree, you may not use the service.
+            By accessing or using ContractOwl, you agree to be bound by these Terms of Service. If you do not agree, you may not use the service.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Description of Service</h2>
           <p className="text-muted-foreground">
-            ClauseGuard provides AI-powered contract analysis, clause extraction, risk scoring, and renewal reminders. The service is provided "as is" and we make no guarantees about the accuracy or completeness of our analysis.
+            ContractOwl provides AI-powered contract analysis, clause extraction, risk scoring, and renewal reminders. The service is provided "as is" and we make no guarantees about the accuracy or completeness of our analysis.
           </p>
         </section>
 
@@ -62,7 +62,7 @@ const TermsOfService = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Limitation of Liability</h2>
           <p className="text-muted-foreground">
-            To the maximum extent permitted by law, ClauseGuard shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the service, including but not limited to losses from contract decisions made based on our analysis.
+            To the maximum extent permitted by law, ContractOwl shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the service, including but not limited to losses from contract decisions made based on our analysis.
           </p>
         </section>
 
@@ -70,8 +70,8 @@ const TermsOfService = () => {
           <h2 className="text-xl font-semibold">Contact</h2>
           <p className="text-muted-foreground">
             Questions about these terms? Contact us at{" "}
-            <a href="mailto:legal@clauseguard.com" className="text-primary hover:underline">
-              legal@clauseguard.com
+            <a href="mailto:legal@contractowl.com" className="text-primary hover:underline">
+              legal@contractowl.com
             </a>
           </p>
         </section>
