@@ -38,7 +38,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-muted-foreground text-lg">Start free. Upgrade when you're ready.</p>
+          <p className="text-muted-foreground text-lg">Start with 3 free contracts. Upgrade when you're ready.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -75,7 +75,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
                 className="w-full"
                 onClick={onStartTrial}
               >
-                Start Free Trial
+                Start Free Trial — 3 Contracts Free
               </Button>
             </div>
           ))}

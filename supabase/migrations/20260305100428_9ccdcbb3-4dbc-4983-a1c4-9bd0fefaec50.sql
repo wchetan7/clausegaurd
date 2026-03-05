@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ALTER COLUMN plan_limit SET DEFAULT 3;
