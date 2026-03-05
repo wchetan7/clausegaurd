@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, ArrowLeft, AlertTriangle } from "lucide-react";
+import { ArrowLeft, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Footer from "@/components/landing/Footer";
@@ -21,7 +21,7 @@ const steps = [
   {
     num: "02",
     title: "AI Scans in 60 Seconds",
-    desc: "Powered by Claude AI, ClauseGuard reads every clause — identifying risks, auto-renewals, and hidden fees.",
+    desc: "Powered by Claude AI, ContractOwl reads every clause — identifying risks, auto-renewals, and hidden fees.",
   },
   {
     num: "03",
@@ -41,8 +41,8 @@ const BlogPost = () => {
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <Shield className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold tracking-tight text-foreground">ClauseGuard</span>
+            <img src="/logo-owl.png" alt="ContractOwl" className="h-7 w-7" />
+            <span className="text-xl font-bold tracking-tight text-foreground">ContractOwl</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <Link to="/blog" className="hover:text-foreground transition-colors">Blog</Link>
@@ -64,25 +64,25 @@ const BlogPost = () => {
           </div>
 
           <h1 className="text-3xl md:text-4xl font-black mb-8 leading-tight">
-            How ClauseGuard Protects Small Businesses from Bad Contracts
+            How ContractOwl Protects Small Businesses from Bad Contracts
           </h1>
 
           {/* Intro */}
           <p className="text-muted-foreground leading-relaxed text-lg mb-8">
             You finally land a new vendor. The contract arrives — 14 pages of dense legal text. You skim it, sign it, and move on. Six months later, you get a surprise invoice. Turns out there was an auto-renewal clause on page 11. You missed the 60-day cancellation window. You're locked in for another year.
           </p>
-          <p className="text-primary font-bold text-xl mb-12">That's why we built ClauseGuard.</p>
+          <p className="text-primary font-bold text-xl mb-12">That's why we built ContractOwl.</p>
 
-          {/* What is ClauseGuard */}
-          <h2 className="text-2xl font-bold mb-4">What is ClauseGuard?</h2>
+          {/* What is ContractOwl */}
+          <h2 className="text-2xl font-bold mb-4">What is ContractOwl?</h2>
           <p className="text-muted-foreground leading-relaxed mb-12">
-            ClauseGuard is an AI-powered contract scanner built for small businesses. Upload a vendor contract and get a detailed risk report in 60 seconds. No legal jargon, no hourly billing — just clear, actionable insights.
+            ContractOwl is an AI-powered contract scanner built for small businesses. Upload a vendor contract and get a detailed risk report in 60 seconds. No legal jargon, no hourly billing — just clear, actionable insights.
           </p>
 
           {/* The Problem */}
           <h2 className="text-2xl font-bold mb-4">The Problem</h2>
           <p className="text-muted-foreground leading-relaxed mb-6">
-            SMBs sign 10–20 vendor contracts per year. Most don't have legal teams. The most dangerous clauses hide in plain sight:
+            SMBs sign 10–20 vendor contracts per year. Most dangerous clauses hide in plain sight:
           </p>
           <ul className="space-y-3 mb-12">
             {dangerousClauses.map((clause) => (
@@ -122,19 +122,19 @@ const BlogPost = () => {
             ))}
           </div>
 
-          {/* What ClauseGuard is NOT */}
-          <h2 className="text-2xl font-bold mb-4">What ClauseGuard is NOT</h2>
+          {/* What ContractOwl is NOT */}
+          <h2 className="text-2xl font-bold mb-4">What ContractOwl is NOT</h2>
           <Alert variant="destructive" className="mb-12 border-destructive/50 bg-destructive/10">
             <AlertTriangle className="h-5 w-5" />
             <AlertDescription className="text-sm leading-relaxed">
-              <strong>ClauseGuard is not a law firm.</strong> It does not provide legal advice. It is your first line of defence — not a substitute for a qualified lawyer on high-value contracts.
+              <strong>ContractOwl is not a law firm.</strong> It does not provide legal advice. It is your first line of defence — not a substitute for a qualified lawyer on high-value contracts.
             </AlertDescription>
           </Alert>
 
           {/* Built for India */}
           <h2 className="text-2xl font-bold mb-4">Built for Indian Small Businesses</h2>
           <p className="text-muted-foreground leading-relaxed mb-12">
-            There are 63 million SMBs in India — and almost none of them have access to a legal team. ClauseGuard levels the playing field, giving every small business owner the power to understand what they're signing before they sign it.
+            There are 63 million SMBs in India — and almost none of them have access to a legal team. ContractOwl levels the playing field, giving every small business owner the power to understand what they're signing before they sign it.
           </p>
 
           {/* CTA */}
@@ -148,7 +148,7 @@ const BlogPost = () => {
 
           {/* Disclaimer */}
           <p className="text-xs text-muted-foreground text-center leading-relaxed">
-            ClauseGuard is an AI-powered tool. It does not provide legal advice. Always consult a qualified lawyer before signing contracts.
+            ContractOwl is an AI-powered tool. It does not provide legal advice. Always consult a qualified lawyer before signing contracts.
           </p>
         </article>
       </main>

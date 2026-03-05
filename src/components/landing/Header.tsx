@@ -1,4 +1,3 @@
-import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
@@ -10,8 +9,8 @@ const Header = ({ onStartTrial }: HeaderProps) => {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Shield className="h-7 w-7 text-primary" />
-          <span className="text-xl font-bold tracking-tight text-foreground">ClauseGuard</span>
+          <img src="/logo-owl.png" alt="ContractOwl" className="h-7 w-7" />
+          <span className="text-xl font-bold tracking-tight text-foreground">ContractOwl</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
           <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>

@@ -1,4 +1,3 @@
-import { Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "@/components/landing/Footer";
 
@@ -8,8 +7,8 @@ const PrivacyPolicy = () => {
       <header className="border-b border-border/50 py-4">
         <div className="container flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <Shield className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">ClauseGuard</span>
+            <img src="/logo-owl.png" alt="ContractOwl" className="h-6 w-6" />
+            <span className="text-xl font-bold">ContractOwl</span>
           </Link>
         </div>
       </header>
@@ -66,8 +65,8 @@ const PrivacyPolicy = () => {
           <h2 className="text-xl font-semibold">Contact Us</h2>
           <p className="text-muted-foreground">
             For any privacy-related questions or requests, contact us at{" "}
-            <a href="mailto:privacy@clauseguard.com" className="text-primary hover:underline">
-              privacy@clauseguard.com
+            <a href="mailto:privacy@contractowl.com" className="text-primary hover:underline">
+              privacy@contractowl.com
             </a>
           </p>
         </section>
