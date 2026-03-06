@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.get-expiring-contracts]
 verify_jwt = false
+
+[functions.analyze-contract-guest]
+verify_jwt = false
