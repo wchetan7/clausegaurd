@@ -28,7 +28,7 @@ const App = () => (
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/how-clauseguard-works" element={<BlogPost />} />
+          <Route path="/blog/how-contractowl-works" element={<BlogPost />} />
           <Route element={<AuthenticatedLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/contracts/:id" element={<ContractAnalysis />} />

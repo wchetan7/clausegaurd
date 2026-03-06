@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
+import DemoSection from "@/components/landing/DemoSection";
+import SocialProof from "@/components/landing/SocialProof";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
 import Footer from "@/components/landing/Footer";
@@ -14,6 +16,8 @@ const Index = () => {
       <Header onStartTrial={() => setAuthOpen(true)} />
       <main>
         <Hero onStartTrial={() => setAuthOpen(true)} />
+        <DemoSection onStartTrial={() => setAuthOpen(true)} />
+        <SocialProof />
         <HowItWorks />
         <Pricing onStartTrial={() => setAuthOpen(true)} />
       </main>

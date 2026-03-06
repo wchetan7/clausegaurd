@@ -1,23 +1,29 @@
-import { Upload, Cpu, FileCheck } from "lucide-react";
+import { Upload, Cpu, FileCheck, Bell } from "lucide-react";
 
 const steps = [
   {
     icon: Upload,
     step: "01",
-    title: "Upload PDF",
-    description: "Drag and drop your vendor contract — we support PDF, DOCX, and more.",
+    title: "Upload Your Contract",
+    description: "Drag and drop your vendor contract PDF — we'll handle the rest.",
   },
   {
     icon: Cpu,
     step: "02",
-    title: "AI Scans in 60 Seconds",
-    description: "Our AI reads every clause, identifying risks, auto-renewals, and hidden fees.",
+    title: "AI Scans for Risky Clauses",
+    description: "Our AI reads every clause, identifying auto-renewals, hidden fees, and termination traps.",
   },
   {
     icon: FileCheck,
     step: "03",
-    title: "Get Risk Report",
-    description: "Receive a detailed risk report with calendar reminders for key dates.",
+    title: "Get Plain English Risk Report",
+    description: "Receive a color-coded risk report that explains every dangerous clause in simple language.",
+  },
+  {
+    icon: Bell,
+    step: "04",
+    title: "Get Email Reminders",
+    description: "Automatic email alerts at 90, 60, and 30 days before renewal deadlines — never miss a cancellation window.",
   },
 ];
 
@@ -28,11 +34,11 @@ const HowItWorks = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4">How It Works</h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Three simple steps to protect your business from contract traps.
+            Four simple steps to protect your business from contract traps.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {steps.map((s) => (
             <div
               key={s.step}
