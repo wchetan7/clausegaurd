@@ -6,7 +6,7 @@ import Footer from "@/components/landing/Footer";
 
 const blogPosts = [
   {
-    slug: "how-clauseguard-works",
+    slug: "how-contractowl-works",
     title: "How ContractOwl Protects Small Businesses from Bad Contracts",
     description:
       "Auto-renewals, hidden fees, termination traps — learn how ContractOwl's AI scanner catches dangerous clauses before you sign.",
