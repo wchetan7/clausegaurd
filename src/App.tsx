@@ -13,6 +13,7 @@ import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import GuestReport from "./pages/GuestReport";
 import AuthenticatedLayout from "./components/layouts/AuthenticatedLayout";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/how-contractowl-works" element={<BlogPost />} />
+          <Route path="/guest-report" element={<GuestReport />} />
           <Route element={<AuthenticatedLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/contracts/:id" element={<ContractAnalysis />} />
