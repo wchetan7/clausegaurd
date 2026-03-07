@@ -36,13 +36,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onStartTrial={() => setAuthOpen(true)} />
+      <Header onStartTrial={handleScanClick} />
       <main>
         <Hero onStartTrial={handleScanClick} />
         <DemoSection onStartTrial={handleScanClick} />
         <SocialProof />
         <HowItWorks />
-        <Pricing onStartTrial={() => setAuthOpen(true)} />
+        <Pricing onStartTrial={handleScanClick} />
       </main>
       <Footer />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
