@@ -89,7 +89,8 @@ const GuestUploadModal = ({ open, onOpenChange, onResult }: GuestUploadModalProp
       }
 
       setStage("analyzing");
-      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-contract-guest`, {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://uldnipuxguytidmgxwhi.supabase.co";
+      const resp = await fetch(`${supabaseUrl}/functions/v1/analyze-contract-guest`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pdf_text: pdfText }),
