@@ -52,6 +52,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     setName("");
     setVendor("");
     setOwnerName("");
+    setBackupEmail("");
     setValue("");
     setFile(null);
     setContractId(null);
