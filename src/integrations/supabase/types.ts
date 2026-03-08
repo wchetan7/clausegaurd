@@ -58,6 +58,7 @@ export type Database = {
       contracts: {
         Row: {
           auto_renewal: boolean | null
+          backup_email: string | null
           contract_value: number | null
           created_at: string
           file_url: string | null
@@ -74,6 +75,7 @@ export type Database = {
         }
         Insert: {
           auto_renewal?: boolean | null
+          backup_email?: string | null
           contract_value?: number | null
           created_at?: string
           file_url?: string | null
@@ -90,6 +92,7 @@ export type Database = {
         }
         Update: {
           auto_renewal?: boolean | null
+          backup_email?: string | null
           contract_value?: number | null
           created_at?: string
           file_url?: string | null
