@@ -51,7 +51,7 @@ const Index = () => {
         <Pricing onStartTrial={handleScanClick} />
       </main>
       <Footer />
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
       <GuestUploadModal open={guestUploadOpen} onOpenChange={setGuestUploadOpen} onResult={handleGuestResult} onSignIn={handleSignIn} />
       <FreeScanLimitModal open={limitOpen} onOpenChange={setLimitOpen} onSeePricing={handleSeePricing} />
     </div>
