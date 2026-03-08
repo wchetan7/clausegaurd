@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [contracts, setContracts] = useState<any[]>([]);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userPlan, setUserPlan] = useState("starter");
 
   const fetchContracts = async () => {
     const { data } = await supabase
