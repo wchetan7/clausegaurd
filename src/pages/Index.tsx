@@ -32,6 +32,7 @@ const Index = () => {
   };
 
   const handleSignIn = () => {
+    setAuthMode("signin");
     setAuthOpen(true);
   };
 
