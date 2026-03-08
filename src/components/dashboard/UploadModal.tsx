@@ -32,13 +32,15 @@ async function extractPdfText(file: File): Promise<string> {
   return pages.join("\n\n");
 }
 
-const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps) => {
+const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
   const [ownerName, setOwnerName] = useState("");
+  const [backupEmail, setBackupEmail] = useState("");
   const [value, setValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const isPro = userPlan === "pro" || userPlan === "team";
   const [dragOver, setDragOver] = useState(false);
   const [contractId, setContractId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
