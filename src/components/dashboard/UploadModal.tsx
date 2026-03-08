@@ -35,6 +35,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
+  const [ownerName, setOwnerName] = useState("");
   const [value, setValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
