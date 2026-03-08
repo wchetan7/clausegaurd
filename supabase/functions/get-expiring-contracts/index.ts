@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
 
   const today = new Date();
   const thirtyDaysOut = new Date(today);
-  thirtyDaysOut.setDate(today.getDate() + 365);
+  thirtyDaysOut.setDate(today.getDate() + 30);
 
   const { data: contracts, error } = await supabase
     .from("contracts")
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     .lte("renewal_date", thirtyDaysOut.toISOString().split("T")[0]);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Failed to fetch contracts" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
