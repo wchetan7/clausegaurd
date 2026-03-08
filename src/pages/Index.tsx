@@ -14,6 +14,7 @@ import { getGuestScanCount } from "@/components/GuestUploadModal";
 
 const Index = () => {
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signup");
   const [guestUploadOpen, setGuestUploadOpen] = useState(false);
   const [limitOpen, setLimitOpen] = useState(false);
   const navigate = useNavigate();
