@@ -12,6 +12,7 @@ interface UploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userId: string;
+  userPlan?: string;
   onSuccess: () => void;
 }
 
