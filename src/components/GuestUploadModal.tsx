@@ -45,7 +45,7 @@ export function incrementGuestScanCount(): void {
   } catch {}
 }
 
-const GuestUploadModal = ({ open, onOpenChange, onResult }: GuestUploadModalProps) => {
+const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [file, setFile] = useState<File | null>(null);
