@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [contracts, setContracts] = useState<any[]>([]);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userPlan, setUserPlan] = useState("starter");
 
   const fetchContracts = async () => {
     const { data } = await supabase
@@ -24,6 +25,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchContracts();
+    supabase.from("profiles").select("plan").eq("user_id", user.id).single().then(({ data }) => {
+      if (data?.plan) setUserPlan(data.plan);
+    });
   }, []);
 
   useEffect(() => {
@@ -58,6 +62,7 @@ const Dashboard = () => {
         open={uploadOpen}
         onOpenChange={setUploadOpen}
         userId={user.id}
+        userPlan={userPlan}
         onSuccess={fetchContracts}
       />
     </div>

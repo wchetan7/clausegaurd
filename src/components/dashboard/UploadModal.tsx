@@ -12,6 +12,7 @@ interface UploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userId: string;
+  userPlan?: string;
   onSuccess: () => void;
 }
 
@@ -31,13 +32,15 @@ async function extractPdfText(file: File): Promise<string> {
   return pages.join("\n\n");
 }
 
-const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps) => {
+const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
   const [ownerName, setOwnerName] = useState("");
+  const [backupEmail, setBackupEmail] = useState("");
   const [value, setValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const isPro = userPlan === "pro" || userPlan === "team";
   const [dragOver, setDragOver] = useState(false);
   const [contractId, setContractId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
@@ -49,6 +52,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
     setName("");
     setVendor("");
     setOwnerName("");
+    setBackupEmail("");
     setValue("");
     setFile(null);
     setContractId(null);
@@ -82,6 +86,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
         name,
         vendor,
         owner_name: ownerName || null,
+        backup_email: isPro ? (backupEmail || null) : null,
         contract_value: parseFloat(value) || 0,
         status: "Scanning",
       }).select("id").single();
@@ -193,6 +198,21 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
                 <Label>Contract Owner</Label>
                 <Input placeholder="e.g. Jane Smith" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
               </div>
+              {isPro ? (
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    Backup Email <span className="text-xs text-primary font-medium">⭐ Pro feature</span>
+                  </Label>
+                  <Input type="email" placeholder="e.g. legal@company.com" value={backupEmail} onChange={(e) => setBackupEmail(e.target.value)} />
+                  <p className="text-xs text-muted-foreground">Reminders will also be sent to this email.</p>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-border/50 bg-secondary/30 p-3 text-center">
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">⭐ Backup Email</span> — Upgrade to Pro to add backup notification emails →
+                  </p>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>Contract Value ($/year)</Label>
                 <Input type="number" placeholder="e.g. 12000" value={value} onChange={(e) => setValue(e.target.value)} />
