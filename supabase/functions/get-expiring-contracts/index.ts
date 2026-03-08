@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     .lte("renewal_date", thirtyDaysOut.toISOString().split("T")[0]);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: "Failed to fetch contracts" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
