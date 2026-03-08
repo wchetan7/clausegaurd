@@ -62,6 +62,7 @@ const Dashboard = () => {
         open={uploadOpen}
         onOpenChange={setUploadOpen}
         userId={user.id}
+        userPlan={userPlan}
         onSuccess={fetchContracts}
       />
     </div>
