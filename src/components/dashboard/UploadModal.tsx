@@ -81,6 +81,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
         user_id: userId,
         name,
         vendor,
+        owner_name: ownerName || null,
         contract_value: parseFloat(value) || 0,
         status: "Scanning",
       }).select("id").single();
