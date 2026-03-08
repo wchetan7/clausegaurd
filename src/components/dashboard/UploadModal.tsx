@@ -86,6 +86,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
         name,
         vendor,
         owner_name: ownerName || null,
+        backup_email: isPro ? (backupEmail || null) : null,
         contract_value: parseFloat(value) || 0,
         status: "Scanning",
       }).select("id").single();
