@@ -14,6 +14,7 @@ interface Contract {
   risk_score: string;
   status: string;
   contract_value: number;
+  owner_name: string | null;
 }
 
 interface ContractsTableProps {
