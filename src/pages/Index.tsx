@@ -30,6 +30,10 @@ const Index = () => {
     navigate("/guest-report", { state: { analysis, contractName } });
   };
 
+  const handleSignIn = () => {
+    setAuthOpen(true);
+  };
+
   const handleSeePricing = () => {
     document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
   };
