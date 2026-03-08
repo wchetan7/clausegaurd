@@ -10,6 +10,7 @@ interface GuestUploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onResult: (analysis: any, contractName: string) => void;
+  onSignIn?: () => void;
 }
 
 type Stage = "form" | "extracting" | "analyzing" | "success" | "error";
@@ -44,7 +45,7 @@ export function incrementGuestScanCount(): void {
   } catch {}
 }
 
-const GuestUploadModal = ({ open, onOpenChange, onResult }: GuestUploadModalProps) => {
+const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -174,10 +175,32 @@ const GuestUploadModal = ({ open, onOpenChange, onResult }: GuestUploadModalProp
                 Scan Contract Free
               </Button>
 
+              {onSignIn && (
+                <button
+                  type="button"
+                  onClick={() => { handleClose(false); onSignIn(); }}
+                  className="w-full text-xs text-center text-primary hover:underline transition-colors"
+                >
+                  Sign in for unlimited scans →
+                </button>
+              )}
+
               <p className="text-xs text-center text-muted-foreground">
                 Your document is processed securely and never stored.
               </p>
             </form>
+
+            {onSignIn && (
+              <p className="text-center text-sm text-muted-foreground mt-2">
+                Already have an account?{" "}
+                <button
+                  onClick={() => { handleClose(false); onSignIn(); }}
+                  className="text-primary hover:underline font-medium"
+                >
+                  Sign in →
+                </button>
+              </p>
+            )}
           </>
         )}
 
