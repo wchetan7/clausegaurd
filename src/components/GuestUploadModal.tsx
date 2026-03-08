@@ -175,10 +175,32 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
                 Scan Contract Free
               </Button>
 
+              {onSignIn && (
+                <button
+                  type="button"
+                  onClick={() => { handleClose(false); onSignIn(); }}
+                  className="w-full text-xs text-center text-primary hover:underline transition-colors"
+                >
+                  Sign in for unlimited scans →
+                </button>
+              )}
+
               <p className="text-xs text-center text-muted-foreground">
                 Your document is processed securely and never stored.
               </p>
             </form>
+
+            {onSignIn && (
+              <p className="text-center text-sm text-muted-foreground mt-2">
+                Already have an account?{" "}
+                <button
+                  onClick={() => { handleClose(false); onSignIn(); }}
+                  className="text-primary hover:underline font-medium"
+                >
+                  Sign in →
+                </button>
+              </p>
+            )}
           </>
         )}
 
