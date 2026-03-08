@@ -25,6 +25,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchContracts();
+    supabase.from("profiles").select("plan").eq("user_id", user.id).single().then(({ data }) => {
+      if (data?.plan) setUserPlan(data.plan);
+    });
   }, []);
 
   useEffect(() => {
