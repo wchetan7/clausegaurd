@@ -110,6 +110,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
               return (
                 <tr key={c.id} className="group hover:bg-secondary/30 transition-colors cursor-pointer" onClick={handleRowClick}>
                   <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
+                  <td className="px-5 py-4 text-sm text-muted-foreground">{c.owner_name || "—"}</td>
                   <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
                   <td className="px-5 py-4 text-sm">
                     {c.renewal_date ? (

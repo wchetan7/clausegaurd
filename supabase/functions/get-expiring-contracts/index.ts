@@ -66,6 +66,7 @@ Deno.serve(async (req) => {
       renewal_date: c.renewal_date,
       contract_value: c.contract_value,
       notice_period_days: c.notice_period_days,
+      owner_name: c.owner_name || null,
       user_email: userEmails[c.user_id] || null,
       days_left: daysLeft,
     };

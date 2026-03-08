@@ -190,6 +190,10 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
                 <Input placeholder="e.g. Acme Corp" value={vendor} onChange={(e) => setVendor(e.target.value)} required />
               </div>
               <div className="space-y-2">
+                <Label>Contract Owner</Label>
+                <Input placeholder="e.g. Jane Smith" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
+              </div>
+              <div className="space-y-2">
                 <Label>Contract Value ($/year)</Label>
                 <Input type="number" placeholder="e.g. 12000" value={value} onChange={(e) => setValue(e.target.value)} />
               </div>
