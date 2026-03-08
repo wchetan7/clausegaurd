@@ -19,6 +19,10 @@ interface AuthModalProps {
 const AuthModal = ({ open, onOpenChange, defaultMode = "signup" }: AuthModalProps) => {
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [isLogin, setIsLogin] = useState(defaultMode === "signin");
+
+  useEffect(() => {
+    setIsLogin(defaultMode === "signin");
+  }, [defaultMode]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
