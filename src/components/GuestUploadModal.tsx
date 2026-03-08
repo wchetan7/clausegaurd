@@ -10,6 +10,7 @@ interface GuestUploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onResult: (analysis: any, contractName: string) => void;
+  onSignIn?: () => void;
 }
 
 type Stage = "form" | "extracting" | "analyzing" | "success" | "error";
