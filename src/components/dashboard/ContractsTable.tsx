@@ -14,6 +14,7 @@ interface Contract {
   risk_score: string;
   status: string;
   contract_value: number;
+  owner_name: string | null;
 }
 
 interface ContractsTableProps {
@@ -81,6 +82,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
           <thead>
             <tr className="border-b border-border/50 text-left">
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Contract</th>
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Owner</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Vendor</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Renewal</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Risk</th>
@@ -108,6 +110,7 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
               return (
                 <tr key={c.id} className="group hover:bg-secondary/30 transition-colors cursor-pointer" onClick={handleRowClick}>
                   <td className="px-5 py-4 text-sm font-medium">{c.name}</td>
+                  <td className="px-5 py-4 text-sm text-muted-foreground">{c.owner_name || "—"}</td>
                   <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
                   <td className="px-5 py-4 text-sm">
                     {c.renewal_date ? (

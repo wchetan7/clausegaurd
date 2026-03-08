@@ -84,6 +84,9 @@ const ContractAnalysis = () => {
         <div>
           <h1 className="text-2xl font-black">{contract.name}</h1>
           <p className="text-muted-foreground">{contract.vendor}</p>
+          {contract.owner_name && (
+            <p className="text-sm text-muted-foreground mt-1">Owner: {contract.owner_name}</p>
+          )}
         </div>
         <Badge variant="outline" className={riskBadgeClass[contract.risk_score] || riskBadgeClass.Low}>
           <ShieldAlert className="mr-1 h-4 w-4" />

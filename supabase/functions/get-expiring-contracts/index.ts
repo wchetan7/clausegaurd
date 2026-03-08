@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
 
   const { data: contracts, error } = await supabase
     .from("contracts")
-    .select("id, name, vendor, renewal_date, contract_value, notice_period_days, user_id")
+    .select("id, name, vendor, renewal_date, contract_value, notice_period_days, user_id, owner_name")
     .eq("status", "Reviewed")
     .eq("auto_renewal", true)
     .gte("renewal_date", today.toISOString().split("T")[0])
@@ -66,6 +66,7 @@ Deno.serve(async (req) => {
       renewal_date: c.renewal_date,
       contract_value: c.contract_value,
       notice_period_days: c.notice_period_days,
+      owner_name: c.owner_name || null,
       user_email: userEmails[c.user_id] || null,
       days_left: daysLeft,
     };

@@ -35,6 +35,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
+  const [ownerName, setOwnerName] = useState("");
   const [value, setValue] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -47,6 +48,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
     setStage("form");
     setName("");
     setVendor("");
+    setOwnerName("");
     setValue("");
     setFile(null);
     setContractId(null);
@@ -79,6 +81,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
         user_id: userId,
         name,
         vendor,
+        owner_name: ownerName || null,
         contract_value: parseFloat(value) || 0,
         status: "Scanning",
       }).select("id").single();
@@ -185,6 +188,10 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
               <div className="space-y-2">
                 <Label>Vendor Name</Label>
                 <Input placeholder="e.g. Acme Corp" value={vendor} onChange={(e) => setVendor(e.target.value)} required />
+              </div>
+              <div className="space-y-2">
+                <Label>Contract Owner</Label>
+                <Input placeholder="e.g. Jane Smith" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <Label>Contract Value ($/year)</Label>

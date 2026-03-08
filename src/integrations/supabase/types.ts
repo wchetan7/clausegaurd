@@ -64,6 +64,7 @@ export type Database = {
           id: string
           name: string
           notice_period_days: number | null
+          owner_name: string | null
           renewal_date: string | null
           risk_score: string | null
           status: string | null
@@ -79,6 +80,7 @@ export type Database = {
           id?: string
           name: string
           notice_period_days?: number | null
+          owner_name?: string | null
           renewal_date?: string | null
           risk_score?: string | null
           status?: string | null
@@ -94,6 +96,7 @@ export type Database = {
           id?: string
           name?: string
           notice_period_days?: number | null
+          owner_name?: string | null
           renewal_date?: string | null
           risk_score?: string | null
           status?: string | null
