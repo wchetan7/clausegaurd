@@ -48,6 +48,7 @@ const UploadModal = ({ open, onOpenChange, userId, onSuccess }: UploadModalProps
     setStage("form");
     setName("");
     setVendor("");
+    setOwnerName("");
     setValue("");
     setFile(null);
     setContractId(null);
