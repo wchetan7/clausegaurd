@@ -198,6 +198,21 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
                 <Label>Contract Owner</Label>
                 <Input placeholder="e.g. Jane Smith" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
               </div>
+              {isPro ? (
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    Backup Email <span className="text-xs text-primary font-medium">⭐ Pro feature</span>
+                  </Label>
+                  <Input type="email" placeholder="e.g. legal@company.com" value={backupEmail} onChange={(e) => setBackupEmail(e.target.value)} />
+                  <p className="text-xs text-muted-foreground">Reminders will also be sent to this email.</p>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-border/50 bg-secondary/30 p-3 text-center">
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">⭐ Backup Email</span> — Upgrade to Pro to add backup notification emails →
+                  </p>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>Contract Value ($/year)</Label>
                 <Input type="number" placeholder="e.g. 12000" value={value} onChange={(e) => setValue(e.target.value)} />
