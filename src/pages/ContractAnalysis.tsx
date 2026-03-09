@@ -46,6 +46,18 @@ const ContractAnalysis = () => {
       ]);
       setContract(c);
       setClauses(cl || []);
+
+      // Check if reminders already exist for this contract
+      const { data: existingReminders } = await supabase
+        .from("reminders")
+        .select("id")
+        .eq("contract_id", id)
+        .eq("dismissed", false)
+        .limit(1);
+      if (existingReminders && existingReminders.length > 0) {
+        setReminderSet(true);
+      }
+
       setLoading(false);
     };
     fetchData();
