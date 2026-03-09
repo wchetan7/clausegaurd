@@ -11,8 +11,9 @@ import {
   ArrowLeft, Download, Share2, Bell, AlertTriangle,
   Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert,
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { exportContractPdf } from "@/lib/exportContractPdf";
+import { useToast } from "@/hooks/use-toast";
 
 const severityConfig: Record<string, { color: string; icon: string; badgeClass: string }> = {
   HIGH: { color: "text-destructive", icon: "🔴", badgeClass: "bg-destructive/20 text-destructive border-destructive/30" },
@@ -33,6 +34,8 @@ const ContractAnalysis = () => {
   const [contract, setContract] = useState<any>(null);
   const [clauses, setClauses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reminderSet, setReminderSet] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!user || !id) return;
@@ -43,6 +46,18 @@ const ContractAnalysis = () => {
       ]);
       setContract(c);
       setClauses(cl || []);
+
+      // Check if reminders already exist for this contract
+      const { data: existingReminders } = await supabase
+        .from("reminders")
+        .select("id")
+        .eq("contract_id", id)
+        .eq("dismissed", false)
+        .limit(1);
+      if (existingReminders && existingReminders.length > 0) {
+        setReminderSet(true);
+      }
+
       setLoading(false);
     };
     fetchData();
@@ -185,9 +200,52 @@ const ContractAnalysis = () => {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            We'll remind you 90, 60, and 30 days before your renewal date so you never miss a cancellation window.
+            {reminderSet
+              ? "Reminders are active for this contract. You'll be notified before your renewal date."
+              : "We'll remind you 90, 60, and 30 days before your renewal date so you never miss a cancellation window."}
           </p>
-          <Button variant="outline" className="gap-2"><Bell className="h-4 w-4" /> Set Reminder</Button>
+          <Button
+            variant="outline"
+            className="gap-2"
+            disabled={reminderSet}
+            onClick={async () => {
+              if (!user || !contract) return;
+              const renewalDate = contract.renewal_date ? new Date(contract.renewal_date) : null;
+              const baseDate = renewalDate || addDays(new Date(), 90);
+              const intervals = renewalDate ? [90, 60, 30] : [30];
+              const rows = intervals
+                .map((days) => {
+                  const d = addDays(baseDate, -days);
+                  if (d <= new Date()) return null;
+                  return {
+                    contract_id: contract.id,
+                    user_id: user.id,
+                    reminder_date: format(d, "yyyy-MM-dd"),
+                    type: "renewal",
+                  };
+                })
+                .filter(Boolean);
+              if (rows.length === 0) {
+                // If all dates are in the past, set one for tomorrow
+                rows.push({
+                  contract_id: contract.id,
+                  user_id: user.id,
+                  reminder_date: format(addDays(new Date(), 1), "yyyy-MM-dd"),
+                  type: "renewal",
+                });
+              }
+              const { error } = await supabase.from("reminders").insert(rows);
+              if (error) {
+                toast({ title: "Failed to set reminder", variant: "destructive" });
+              } else {
+                setReminderSet(true);
+                toast({ title: `${rows.length} reminder(s) set successfully` });
+              }
+            }}
+          >
+            <Bell className="h-4 w-4" />
+            {reminderSet ? "Reminders Active" : "Set Reminder"}
+          </Button>
         </CardContent>
       </Card>
 
