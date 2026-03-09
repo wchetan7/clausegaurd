@@ -200,9 +200,52 @@ const ContractAnalysis = () => {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            We'll remind you 90, 60, and 30 days before your renewal date so you never miss a cancellation window.
+            {reminderSet
+              ? "Reminders are active for this contract. You'll be notified before your renewal date."
+              : "We'll remind you 90, 60, and 30 days before your renewal date so you never miss a cancellation window."}
           </p>
-          <Button variant="outline" className="gap-2"><Bell className="h-4 w-4" /> Set Reminder</Button>
+          <Button
+            variant="outline"
+            className="gap-2"
+            disabled={reminderSet}
+            onClick={async () => {
+              if (!user || !contract) return;
+              const renewalDate = contract.renewal_date ? new Date(contract.renewal_date) : null;
+              const baseDate = renewalDate || addDays(new Date(), 90);
+              const intervals = renewalDate ? [90, 60, 30] : [30];
+              const rows = intervals
+                .map((days) => {
+                  const d = addDays(baseDate, -days);
+                  if (d <= new Date()) return null;
+                  return {
+                    contract_id: contract.id,
+                    user_id: user.id,
+                    reminder_date: format(d, "yyyy-MM-dd"),
+                    type: "renewal",
+                  };
+                })
+                .filter(Boolean);
+              if (rows.length === 0) {
+                // If all dates are in the past, set one for tomorrow
+                rows.push({
+                  contract_id: contract.id,
+                  user_id: user.id,
+                  reminder_date: format(addDays(new Date(), 1), "yyyy-MM-dd"),
+                  type: "renewal",
+                });
+              }
+              const { error } = await supabase.from("reminders").insert(rows);
+              if (error) {
+                toast({ title: "Failed to set reminder", variant: "destructive" });
+              } else {
+                setReminderSet(true);
+                toast({ title: `${rows.length} reminder(s) set successfully` });
+              }
+            }}
+          >
+            <Bell className="h-4 w-4" />
+            {reminderSet ? "Reminders Active" : "Set Reminder"}
+          </Button>
         </CardContent>
       </Card>
 
