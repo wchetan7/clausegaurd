@@ -11,8 +11,9 @@ import {
   ArrowLeft, Download, Share2, Bell, AlertTriangle,
   Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert,
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { exportContractPdf } from "@/lib/exportContractPdf";
+import { useToast } from "@/hooks/use-toast";
 
 const severityConfig: Record<string, { color: string; icon: string; badgeClass: string }> = {
   HIGH: { color: "text-destructive", icon: "🔴", badgeClass: "bg-destructive/20 text-destructive border-destructive/30" },
