@@ -34,6 +34,8 @@ const ContractAnalysis = () => {
   const [contract, setContract] = useState<any>(null);
   const [clauses, setClauses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reminderSet, setReminderSet] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!user || !id) return;
