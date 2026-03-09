@@ -223,6 +223,29 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
 
     await serviceClient.from("contracts").update(updates).eq("id", contract_id);
 
+    // Auto-create reminders if renewal_date was found
+    if (analysis.renewal_date) {
+      const userId = claimsData.claims.sub as string;
+      const renewalDate = new Date(analysis.renewal_date);
+      const reminderIntervals = [90, 60, 30]; // days before renewal
+      const reminderRows = reminderIntervals
+        .map((days) => {
+          const d = new Date(renewalDate);
+          d.setDate(d.getDate() - days);
+          if (d <= new Date()) return null;
+          return {
+            contract_id,
+            user_id: userId,
+            reminder_date: d.toISOString().split("T")[0],
+            type: "renewal",
+          };
+        })
+        .filter(Boolean);
+      if (reminderRows.length > 0) {
+        await serviceClient.from("reminders").insert(reminderRows);
+      }
+    }
+
     return new Response(JSON.stringify({ success: true, analysis }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
