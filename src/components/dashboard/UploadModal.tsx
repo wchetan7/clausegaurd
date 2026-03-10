@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
 
 interface UploadModalProps {
   open: boolean;
@@ -100,6 +101,10 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
 
       if (!pdfText.trim()) {
         throw new Error("Could not extract text from PDF. The file may be image-based.");
+      }
+
+      if (!isLikelyContract(pdfText)) {
+        throw new Error(NOT_A_CONTRACT_MSG);
       }
 
       // Step 3: Call AI analysis

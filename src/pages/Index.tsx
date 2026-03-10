@@ -27,6 +27,11 @@ const Index = () => {
     }
   };
 
+  const handleSignupClick = () => {
+    setAuthMode("signup");
+    setAuthOpen(true);
+  };
+
   const handleGuestResult = (analysis: any, contractName: string) => {
     navigate("/guest-report", { state: { analysis, contractName } });
   };
@@ -42,13 +47,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onStartTrial={handleScanClick} />
+      <Header onStartTrial={handleSignupClick} />
       <main>
-        <Hero onStartTrial={handleScanClick} />
+        <Hero onStartTrial={handleScanClick} onSignup={handleSignupClick} />
         <DemoSection onStartTrial={handleScanClick} />
         <SocialProof />
         <HowItWorks />
-        <Pricing onStartTrial={handleScanClick} />
+        <Pricing onStartTrial={handleSignupClick} />
       </main>
       <Footer />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
