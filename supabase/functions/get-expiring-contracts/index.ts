@@ -29,13 +29,14 @@ Deno.serve(async (req) => {
   const thirtyDaysOut = new Date(today);
   thirtyDaysOut.setDate(today.getDate() + 30);
 
+  // Use cancellation_deadline for triggering reminders, fall back to renewal_date
   const { data: contracts, error } = await supabase
     .from("contracts")
-    .select("id, name, vendor, renewal_date, contract_value, notice_period_days, user_id, owner_name, backup_email")
+    .select("id, name, vendor, renewal_date, expiry_date, cancellation_deadline, contract_value, notice_period_days, user_id, owner_name, backup_email")
     .eq("status", "Reviewed")
     .eq("auto_renewal", true)
-    .gte("renewal_date", today.toISOString().split("T")[0])
-    .lte("renewal_date", thirtyDaysOut.toISOString().split("T")[0]);
+    .or(`cancellation_deadline.gte.${today.toISOString().split("T")[0]},renewal_date.gte.${today.toISOString().split("T")[0]}`)
+    .or(`cancellation_deadline.lte.${thirtyDaysOut.toISOString().split("T")[0]},renewal_date.lte.${thirtyDaysOut.toISOString().split("T")[0]}`);
 
   if (error) {
     return new Response(JSON.stringify({ error: "Failed to fetch contracts" }), {
