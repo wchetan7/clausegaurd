@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle, Shield, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
 
 interface GuestUploadModalProps {
   open: boolean;
