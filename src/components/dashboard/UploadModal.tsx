@@ -103,6 +103,10 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
         throw new Error("Could not extract text from PDF. The file may be image-based.");
       }
 
+      if (!isLikelyContract(pdfText)) {
+        throw new Error(NOT_A_CONTRACT_MSG);
+      }
+
       // Step 3: Call AI analysis
       setStage("analyzing");
       const { data: session } = await supabase.auth.getSession();

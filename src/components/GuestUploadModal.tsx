@@ -90,6 +90,10 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
         throw new Error("Could not extract text from PDF. The file may be image-based.");
       }
 
+      if (!isLikelyContract(pdfText)) {
+        throw new Error(NOT_A_CONTRACT_MSG);
+      }
+
       setStage("analyzing");
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://uldnipuxguytidmgxwhi.supabase.co";
       const resp = await fetch(`${supabaseUrl}/functions/v1/analyze-contract-guest`, {
