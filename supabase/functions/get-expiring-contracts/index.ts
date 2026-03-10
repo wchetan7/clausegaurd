@@ -29,13 +29,14 @@ Deno.serve(async (req) => {
   const thirtyDaysOut = new Date(today);
   thirtyDaysOut.setDate(today.getDate() + 30);
 
+  // Use cancellation_deadline for triggering reminders, fall back to renewal_date
   const { data: contracts, error } = await supabase
     .from("contracts")
-    .select("id, name, vendor, renewal_date, contract_value, notice_period_days, user_id, owner_name, backup_email")
+    .select("id, name, vendor, renewal_date, expiry_date, cancellation_deadline, contract_value, notice_period_days, user_id, owner_name, backup_email")
     .eq("status", "Reviewed")
     .eq("auto_renewal", true)
-    .gte("renewal_date", today.toISOString().split("T")[0])
-    .lte("renewal_date", thirtyDaysOut.toISOString().split("T")[0]);
+    .or(`cancellation_deadline.gte.${today.toISOString().split("T")[0]},renewal_date.gte.${today.toISOString().split("T")[0]}`)
+    .or(`cancellation_deadline.lte.${thirtyDaysOut.toISOString().split("T")[0]},renewal_date.lte.${thirtyDaysOut.toISOString().split("T")[0]}`);
 
   if (error) {
     return new Response(JSON.stringify({ error: "Failed to fetch contracts" }), {
@@ -56,19 +57,22 @@ Deno.serve(async (req) => {
   }
 
   const result = (contracts || []).map((c) => {
-    const daysLeft = Math.ceil(
-      (new Date(c.renewal_date).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    const triggerDate = c.cancellation_deadline || c.renewal_date;
+    const daysLeft = triggerDate
+      ? Math.ceil((new Date(triggerDate).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+      : null;
     return {
       id: c.id,
       name: c.name,
       vendor: c.vendor,
+      expiry_date: c.expiry_date || c.renewal_date,
+      cancellation_deadline: c.cancellation_deadline || null,
       renewal_date: c.renewal_date,
       contract_value: c.contract_value,
       notice_period_days: c.notice_period_days,
       owner_name: c.owner_name || null,
       user_email: userEmails[c.user_id] || null,
-      days_left: daysLeft,
+      days_until_cancellation_deadline: daysLeft,
     };
   });
 
