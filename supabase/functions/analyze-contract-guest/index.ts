@@ -19,6 +19,22 @@ serve(async (req) => {
       });
     }
 
+    // Server-side contract validation
+    const CONTRACT_KEYWORDS = [
+      "agreement", "terms", "clause", "party", "parties",
+      "obligations", "renewal", "termination", "signed",
+      "contract", "herein", "hereby", "whereas", "indemnif",
+      "liability", "governing law", "jurisdiction",
+    ];
+    const lower = pdf_text.toLowerCase();
+    const matchCount = CONTRACT_KEYWORDS.filter((kw: string) => lower.includes(kw)).length;
+    if (matchCount < 3) {
+      return new Response(JSON.stringify({ error: "This doesn't appear to be a contract. Please upload a vendor or service agreement PDF." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
