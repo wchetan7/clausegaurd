@@ -27,6 +27,11 @@ const Index = () => {
     }
   };
 
+  const handleSignupClick = () => {
+    setAuthMode("signup");
+    setAuthOpen(true);
+  };
+
   const handleGuestResult = (analysis: any, contractName: string) => {
     navigate("/guest-report", { state: { analysis, contractName } });
   };
