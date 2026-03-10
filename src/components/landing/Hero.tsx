@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 
 interface HeroProps {
   onStartTrial: () => void;
+  onSignup?: () => void;
 }
 
-const Hero = ({ onStartTrial }: HeroProps) => {
+const Hero = ({ onStartTrial, onSignup }: HeroProps) => {
   return (
     <section className="relative pt-32 pb-20 overflow-hidden">
       {/* Glow effect */}
@@ -30,8 +31,13 @@ const Hero = ({ onStartTrial }: HeroProps) => {
             Scan My Contract Free
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <p className="text-sm text-muted-foreground">Trusted by freelancers and consultants. No credit card required.</p>
+          {onSignup && (
+            <Button size="lg" variant="outline" className="text-base px-8 h-12" onClick={onSignup}>
+              Get Started Free
+            </Button>
+          )}
         </div>
+        <p className="text-sm text-muted-foreground mt-4">Trusted by freelancers and consultants. No credit card required.</p>
       </div>
     </section>
   );
