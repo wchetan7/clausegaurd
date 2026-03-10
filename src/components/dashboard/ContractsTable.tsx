@@ -11,6 +11,8 @@ interface Contract {
   name: string;
   vendor: string;
   renewal_date: string | null;
+  expiry_date: string | null;
+  cancellation_deadline: string | null;
   risk_score: string;
   status: string;
   contract_value: number;
