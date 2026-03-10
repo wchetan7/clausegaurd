@@ -233,14 +233,16 @@ IMPORTANT: The clauses array is the source of truth. Metadata fields must be con
 
     await serviceClient.from("contracts").update(updates).eq("id", contract_id);
 
-    // Auto-create reminders if renewal_date was found
+    // Auto-create reminders based on cancellation_deadline (or expiry_date fallback)
     if (analysis.renewal_date) {
       const userId = claimsData.claims.sub as string;
-      const renewalDate = new Date(analysis.renewal_date);
-      const reminderIntervals = [90, 60, 30]; // days before renewal
+      const deadlineDate = updates.cancellation_deadline
+        ? new Date(updates.cancellation_deadline)
+        : new Date(analysis.renewal_date);
+      const reminderIntervals = [90, 60, 30]; // days before cancellation deadline
       const reminderRows = reminderIntervals
         .map((days) => {
-          const d = new Date(renewalDate);
+          const d = new Date(deadlineDate);
           d.setDate(d.getDate() - days);
           if (d <= new Date()) return null;
           return {

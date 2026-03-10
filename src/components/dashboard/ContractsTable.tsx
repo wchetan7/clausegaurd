@@ -116,10 +116,19 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
                   <td className="px-5 py-4 text-sm text-muted-foreground">{c.owner_name || "—"}</td>
                   <td className="px-5 py-4 text-sm text-muted-foreground">{c.vendor}</td>
                   <td className="px-5 py-4 text-sm">
-                    {c.renewal_date ? (
-                      <span className="text-muted-foreground">{format(new Date(c.renewal_date), "MMM d, yyyy")}</span>
+                    {c.expiry_date ? (
+                      <span className="text-muted-foreground">{format(new Date(c.expiry_date), "MMM d, yyyy")}</span>
                     ) : (
-                      <span className="text-warning font-medium">Check contract</span>
+                      <span className="text-warning font-medium">—</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-4 text-sm">
+                    {c.cancellation_deadline ? (
+                      <span className={`font-medium ${new Date(c.cancellation_deadline) <= new Date(Date.now() + 30 * 86400000) ? "text-destructive" : "text-muted-foreground"}`}>
+                        {format(new Date(c.cancellation_deadline), "MMM d, yyyy")}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
                     )}
                   </td>
                   <td className="px-5 py-4">

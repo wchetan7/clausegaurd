@@ -57,19 +57,22 @@ Deno.serve(async (req) => {
   }
 
   const result = (contracts || []).map((c) => {
-    const daysLeft = Math.ceil(
-      (new Date(c.renewal_date).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    const triggerDate = c.cancellation_deadline || c.renewal_date;
+    const daysLeft = triggerDate
+      ? Math.ceil((new Date(triggerDate).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+      : null;
     return {
       id: c.id,
       name: c.name,
       vendor: c.vendor,
+      expiry_date: c.expiry_date || c.renewal_date,
+      cancellation_deadline: c.cancellation_deadline || null,
       renewal_date: c.renewal_date,
       contract_value: c.contract_value,
       notice_period_days: c.notice_period_days,
       owner_name: c.owner_name || null,
       user_email: userEmails[c.user_id] || null,
-      days_left: daysLeft,
+      days_until_cancellation_deadline: daysLeft,
     };
   });
 

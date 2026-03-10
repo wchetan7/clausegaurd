@@ -109,7 +109,7 @@ const ContractAnalysis = () => {
         </Badge>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <Card className="gradient-card border-border/50">
           <CardContent className="p-4 flex items-center gap-3">
             <DollarSign className="h-5 w-5 text-primary" />
