@@ -84,7 +84,8 @@ const ContractsTable = ({ contracts, onUpload }: ContractsTableProps) => {
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Contract</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Owner</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Vendor</th>
-              <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Renewal</th>
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Expiry</th>
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Cancel By</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Risk</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
               <th className="px-5 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Value</th>
