@@ -210,8 +210,8 @@ const ContractAnalysis = () => {
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
             {reminderSet
-              ? "Reminders are active for this contract. You'll be notified before your renewal date."
-              : "We'll remind you 90, 60, and 30 days before your renewal date so you never miss a cancellation window."}
+              ? "Reminders are active for this contract. You'll be notified before your cancellation deadline."
+              : "We'll remind you 90, 60, and 30 days before your cancellation deadline so you never miss a cancellation window."}
           </p>
           <Button
             variant="outline"
@@ -219,9 +219,10 @@ const ContractAnalysis = () => {
             disabled={reminderSet}
             onClick={async () => {
               if (!user || !contract) return;
-              const renewalDate = contract.renewal_date ? new Date(contract.renewal_date) : null;
-              const baseDate = renewalDate || addDays(new Date(), 90);
-              const intervals = renewalDate ? [90, 60, 30] : [30];
+              // Use cancellation_deadline, fall back to expiry_date, then renewal_date
+              const deadlineDate = contract.cancellation_deadline ? new Date(contract.cancellation_deadline) : (contract.expiry_date ? new Date(contract.expiry_date) : (contract.renewal_date ? new Date(contract.renewal_date) : null));
+              const baseDate = deadlineDate || addDays(new Date(), 90);
+              const intervals = deadlineDate ? [90, 60, 30] : [30];
               const rows = intervals
                 .map((days) => {
                   const d = addDays(baseDate, -days);
