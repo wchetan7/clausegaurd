@@ -1,0 +1,1 @@
+ALTER TABLE public.contracts ADD COLUMN expiry_date date, ADD COLUMN cancellation_deadline date;
