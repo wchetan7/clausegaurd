@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
 
 interface UploadModalProps {
   open: boolean;
