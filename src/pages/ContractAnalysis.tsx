@@ -123,8 +123,17 @@ const ContractAnalysis = () => {
           <CardContent className="p-4 flex items-center gap-3">
             <CalendarDays className="h-5 w-5 text-warning" />
             <div>
-              <p className="text-xs text-muted-foreground">Renewal Date</p>
-              <p className="font-bold">{contract.renewal_date ? format(new Date(contract.renewal_date), "MMM d, yyyy") : "N/A"}</p>
+              <p className="text-xs text-muted-foreground">Expiry Date</p>
+              <p className="font-bold">{contract.expiry_date ? format(new Date(contract.expiry_date), "MMM d, yyyy") : "N/A"}</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="gradient-card border-border/50">
+          <CardContent className="p-4 flex items-center gap-3">
+            <AlertTriangle className={`h-5 w-5 ${contract.cancellation_deadline && new Date(contract.cancellation_deadline) <= new Date(Date.now() + 30 * 86400000) ? "text-destructive" : "text-muted-foreground"}`} />
+            <div>
+              <p className="text-xs text-muted-foreground">Cancel By</p>
+              <p className="font-bold">{contract.cancellation_deadline ? format(new Date(contract.cancellation_deadline), "MMM d, yyyy") : "N/A"}</p>
             </div>
           </CardContent>
         </Card>
