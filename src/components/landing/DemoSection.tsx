@@ -88,7 +88,7 @@ const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px]">
-                <Button variant="outline" className="gap-2" onClick={onStartTrial}>
+                <Button variant="outline" className="gap-2" onClick={onSignup}>
                   <Lock className="h-4 w-4" />
                   Sign up to see full report →
                 </Button>
