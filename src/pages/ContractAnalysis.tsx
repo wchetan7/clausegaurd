@@ -259,6 +259,52 @@ const ContractAnalysis = () => {
             <Bell className="h-4 w-4" />
             {reminderSet ? "Reminders Active" : "Set Reminder"}
           </Button>
+
+          {/* Calendar buttons — Pro/Team only, shown after reminder is set */}
+          {reminderSet && (userPlan === "pro" || userPlan === "team") && (
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  const deadlineDate = contract.cancellation_deadline || contract.expiry_date || contract.renewal_date;
+                  if (!deadlineDate) return;
+                  const url = buildGoogleCalendarUrl({
+                    contractName: contract.name,
+                    vendor: contract.vendor,
+                    reminderDate: deadlineDate,
+                    renewalDate: contract.renewal_date,
+                  });
+                  window.open(url, "_blank");
+                }}
+              >
+                <Calendar className="h-4 w-4" /> Add to Google Calendar 📅
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  const deadlineDate = contract.cancellation_deadline || contract.expiry_date || contract.renewal_date;
+                  if (!deadlineDate) return;
+                  downloadIcsFile({
+                    contractName: contract.name,
+                    vendor: contract.vendor,
+                    reminderDate: deadlineDate,
+                    renewalDate: contract.renewal_date,
+                  });
+                }}
+              >
+                <Calendar className="h-4 w-4" /> Download .ics file 📅
+              </Button>
+            </div>
+          )}
+
+          {reminderSet && userPlan === "starter" && (
+            <p className="text-xs text-muted-foreground pt-2">
+              📅 Calendar sync is available on Pro and Team plans.{" "}
+              <button onClick={() => navigate("/")} className="text-primary hover:underline font-medium">Upgrade</button>
+            </p>
+          )}
         </CardContent>
       </Card>
 
