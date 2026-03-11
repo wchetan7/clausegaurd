@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle, Shield, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
+import { isAcceptedFile, extractFileText } from "@/lib/extractText";
 
 interface GuestUploadModalProps {
   open: boolean;
@@ -15,20 +16,6 @@ interface GuestUploadModalProps {
 }
 
 type Stage = "form" | "extracting" | "analyzing" | "success" | "error";
-
-async function extractPdfText(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const pages: string[] = [];
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    pages.push(content.items.map((item: any) => item.str).join(" "));
-  }
-  return pages.join("\n\n");
-}
 
 const GUEST_SCAN_KEY = "contractowl_guest_scans";
 
@@ -72,19 +59,19 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
     e.preventDefault();
     setDragOver(false);
     const f = e.dataTransfer.files[0];
-    if (f?.type === "application/pdf") setFile(f);
+    if (f && isAcceptedFile(f)) setFile(f);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      toast({ title: "Please select a PDF file", variant: "destructive" });
+      toast({ title: "Please select a PDF or DOCX file", variant: "destructive" });
       return;
     }
 
     try {
       setStage("extracting");
-      const pdfText = await extractPdfText(file);
+      const pdfText = await extractFileText(file);
 
       if (!pdfText.trim()) {
         throw new Error("Could not extract text from PDF. The file may be image-based.");
@@ -150,9 +137,9 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
                 <input
                   id="guest-file-input"
                   type="file"
-                  accept=".pdf"
-                  className="hidden"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                   accept=".pdf,.docx"
+                   className="hidden"
+                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                 />
                 {file ? (
                   <div className="flex items-center justify-center gap-2 text-primary">
@@ -163,7 +150,7 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
                   <>
                     <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      Drag & drop PDF or{" "}
+                     Drag & drop PDF or DOCX or{" "}
                       <span className="text-primary font-medium">browse</span>
                     </p>
                   </>

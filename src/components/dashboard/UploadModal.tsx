@@ -8,6 +8,7 @@ import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle } from "lucide-r
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
+import { isAcceptedFile, extractFileText } from "@/lib/extractText";
 
 interface UploadModalProps {
   open: boolean;
@@ -18,20 +19,6 @@ interface UploadModalProps {
 }
 
 type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
-
-async function extractPdfText(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const pages: string[] = [];
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    pages.push(content.items.map((item: any) => item.str).join(" "));
-  }
-  return pages.join("\n\n");
-}
 
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
@@ -69,13 +56,13 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     e.preventDefault();
     setDragOver(false);
     const f = e.dataTransfer.files[0];
-    if (f?.type === "application/pdf") setFile(f);
+    if (f && isAcceptedFile(f)) setFile(f);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      toast({ title: "Please select a PDF file", variant: "destructive" });
+      toast({ title: "Please select a PDF or DOCX file", variant: "destructive" });
       return;
     }
 
@@ -97,7 +84,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
 
       // Step 2: Extract PDF text
       setStage("extracting");
-      const pdfText = await extractPdfText(file);
+      const pdfText = await extractFileText(file);
 
       if (!pdfText.trim()) {
         throw new Error("Could not extract text from PDF. The file may be image-based.");
@@ -171,7 +158,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
                 <input
                   id="file-input"
                   type="file"
-                  accept=".pdf"
+                  accept=".pdf,.docx"
                   className="hidden"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                 />
@@ -184,7 +171,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
                   <>
                     <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      Drag & drop PDF or{" "}
+                     Drag & drop PDF or DOCX or{" "}
                       <span className="text-primary font-medium">browse</span>
                     </p>
                   </>
