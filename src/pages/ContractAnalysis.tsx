@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/accordion";
 import {
   ArrowLeft, Download, Share2, Bell, AlertTriangle,
-  Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert,
+  Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert, Calendar,
 } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { exportContractPdf } from "@/lib/exportContractPdf";
+import { buildGoogleCalendarUrl, downloadIcsFile } from "@/lib/calendarUtils";
 import { useToast } from "@/hooks/use-toast";
 
 const severityConfig: Record<string, { color: string; icon: string; badgeClass: string }> = {
@@ -35,19 +36,21 @@ const ContractAnalysis = () => {
   const [clauses, setClauses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [reminderSet, setReminderSet] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("starter");
   const { toast } = useToast();
 
   useEffect(() => {
     if (!user || !id) return;
     const fetchData = async () => {
-      const [{ data: c }, { data: cl }] = await Promise.all([
+      const [{ data: c }, { data: cl }, { data: profile }] = await Promise.all([
         supabase.from("contracts").select("*").eq("id", id).single(),
         supabase.from("contract_clauses").select("*").eq("contract_id", id).order("severity"),
+        supabase.from("profiles").select("plan").eq("user_id", user.id).single(),
       ]);
       setContract(c);
       setClauses(cl || []);
+      if (profile?.plan) setUserPlan(profile.plan);
 
-      // Check if reminders already exist for this contract
       const { data: existingReminders } = await supabase
         .from("reminders")
         .select("id")
@@ -256,6 +259,52 @@ const ContractAnalysis = () => {
             <Bell className="h-4 w-4" />
             {reminderSet ? "Reminders Active" : "Set Reminder"}
           </Button>
+
+          {/* Calendar buttons — Pro/Team only, shown after reminder is set */}
+          {reminderSet && (userPlan === "pro" || userPlan === "team") && (
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  const deadlineDate = contract.cancellation_deadline || contract.expiry_date || contract.renewal_date;
+                  if (!deadlineDate) return;
+                  const url = buildGoogleCalendarUrl({
+                    contractName: contract.name,
+                    vendor: contract.vendor,
+                    reminderDate: deadlineDate,
+                    renewalDate: contract.renewal_date,
+                  });
+                  window.open(url, "_blank");
+                }}
+              >
+                <Calendar className="h-4 w-4" /> Add to Google Calendar 📅
+              </Button>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  const deadlineDate = contract.cancellation_deadline || contract.expiry_date || contract.renewal_date;
+                  if (!deadlineDate) return;
+                  downloadIcsFile({
+                    contractName: contract.name,
+                    vendor: contract.vendor,
+                    reminderDate: deadlineDate,
+                    renewalDate: contract.renewal_date,
+                  });
+                }}
+              >
+                <Calendar className="h-4 w-4" /> Download .ics file 📅
+              </Button>
+            </div>
+          )}
+
+          {reminderSet && userPlan === "starter" && (
+            <p className="text-xs text-muted-foreground pt-2">
+              📅 Calendar sync is available on Pro and Team plans.{" "}
+              <button onClick={() => navigate("/")} className="text-primary hover:underline font-medium">Upgrade</button>
+            </p>
+          )}
         </CardContent>
       </Card>
 
