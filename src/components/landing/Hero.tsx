@@ -23,7 +23,7 @@ const Hero = ({ onStartTrial, onSignup }: HeroProps) => {
         </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          ContractOwl flags every auto-renewal trap, hidden fee and cancellation deadline before the clock runs out.
+          Upload any vendor contract → get a plain English risk report in 60 seconds → never miss a cancellation deadline again.
         </p>
         
         <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
