@@ -52,7 +52,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      toast({ title: "Please select a PDF file", variant: "destructive" });
+      toast({ title: "Please select a PDF or DOCX file", variant: "destructive" });
       return;
     }
 
