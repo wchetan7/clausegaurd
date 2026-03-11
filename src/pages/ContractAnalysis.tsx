@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/accordion";
 import {
   ArrowLeft, Download, Share2, Bell, AlertTriangle,
-  Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert,
+  Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert, Calendar,
 } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { exportContractPdf } from "@/lib/exportContractPdf";
+import { buildGoogleCalendarUrl, downloadIcsFile } from "@/lib/calendarUtils";
 import { useToast } from "@/hooks/use-toast";
 
 const severityConfig: Record<string, { color: string; icon: string; badgeClass: string }> = {
