@@ -50,7 +50,7 @@ const Index = () => {
       <Header onStartTrial={handleSignupClick} />
       <main>
         <Hero onStartTrial={handleScanClick} onSignup={handleSignupClick} />
-        <DemoSection onStartTrial={handleScanClick} />
+        <DemoSection onStartTrial={handleScanClick} onSignup={handleSignupClick} />
         <SocialProof />
         <HowItWorks />
         <Pricing onStartTrial={handleScanClick} />

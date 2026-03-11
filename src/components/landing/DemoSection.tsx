@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 
 interface DemoSectionProps {
   onStartTrial: () => void;
+  onSignup: () => void;
 }
 
 const clauses = [
@@ -37,7 +38,7 @@ const clauses = [
   },
 ];
 
-const DemoSection = ({ onStartTrial }: DemoSectionProps) => {
+const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
   return (
     <section className="py-20 border-t border-border/50">
       <div className="container max-w-3xl mx-auto">
@@ -87,7 +88,7 @@ const DemoSection = ({ onStartTrial }: DemoSectionProps) => {
                 </p>
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px]">
-                <Button variant="outline" className="gap-2" onClick={onStartTrial}>
+                <Button variant="outline" className="gap-2" onClick={onSignup}>
                   <Lock className="h-4 w-4" />
                   Sign up to see full report →
                 </Button>
