@@ -38,7 +38,7 @@ const clauses = [
   },
 ];
 
-const DemoSection = ({ onStartTrial }: DemoSectionProps) => {
+const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
   return (
     <section className="py-20 border-t border-border/50">
       <div className="container max-w-3xl mx-auto">
