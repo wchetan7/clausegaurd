@@ -62,7 +62,7 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
 
     try {
       setStage("extracting");
-      const pdfText = await extractPdfText(file);
+      const pdfText = await extractFileText(file);
 
       if (!pdfText.trim()) {
         throw new Error("Could not extract text from PDF. The file may be image-based.");
