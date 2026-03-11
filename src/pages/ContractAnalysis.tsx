@@ -42,14 +42,15 @@ const ContractAnalysis = () => {
   useEffect(() => {
     if (!user || !id) return;
     const fetchData = async () => {
-      const [{ data: c }, { data: cl }] = await Promise.all([
+      const [{ data: c }, { data: cl }, { data: profile }] = await Promise.all([
         supabase.from("contracts").select("*").eq("id", id).single(),
         supabase.from("contract_clauses").select("*").eq("contract_id", id).order("severity"),
+        supabase.from("profiles").select("plan").eq("user_id", user.id).single(),
       ]);
       setContract(c);
       setClauses(cl || []);
+      if (profile?.plan) setUserPlan(profile.plan);
 
-      // Check if reminders already exist for this contract
       const { data: existingReminders } = await supabase
         .from("reminders")
         .select("id")
