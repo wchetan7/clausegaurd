@@ -128,9 +128,9 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
                 <input
                   id="guest-file-input"
                   type="file"
-                  accept=".pdf"
-                  className="hidden"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                   accept=".pdf,.docx"
+                   className="hidden"
+                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                 />
                 {file ? (
                   <div className="flex items-center justify-center gap-2 text-primary">
