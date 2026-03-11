@@ -1,16 +1,17 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { lovable } from "@/integrations/lovable/index";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { useState } from "react";
 
 interface FreeScanLimitModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSeePricing: () => void;
+  onEmailSignup?: () => void;
 }
 
-const FreeScanLimitModal = ({ open, onOpenChange, onSeePricing }: FreeScanLimitModalProps) => {
+const FreeScanLimitModal = ({ open, onOpenChange, onSeePricing, onEmailSignup }: FreeScanLimitModalProps) => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleTimedOut, setGoogleTimedOut] = useState(false);
 
@@ -21,7 +22,7 @@ const FreeScanLimitModal = ({ open, onOpenChange, onSeePricing }: FreeScanLimitM
     const timeout = setTimeout(() => {
       setGoogleTimedOut(true);
       setGoogleLoading(false);
-    }, 15000);
+    }, 10000);
 
     try {
       const { error } = await lovable.auth.signInWithOAuth("google", {
@@ -58,22 +59,38 @@ const FreeScanLimitModal = ({ open, onOpenChange, onSeePricing }: FreeScanLimitM
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
             )}
-            {googleLoading ? "Connecting..." : "Sign up free with Google →"}
+            {googleLoading ? "Connecting..." : "Continue with Google →"}
           </Button>
-          {googleLoading && (
-            <p className="text-xs text-muted-foreground text-center animate-pulse">
-              This may take a few seconds
-            </p>
-          )}
+
           {googleTimedOut && (
-            <p className="text-xs text-destructive text-center">
-              Connection timed out. Try email login instead.
-            </p>
+            <button
+              onClick={() => {
+                onOpenChange(false);
+                onEmailSignup?.();
+              }}
+              className="text-sm text-primary hover:underline font-medium"
+            >
+              Taking too long? Try signing up with email instead →
+            </button>
           )}
+
           <Button
             variant="outline"
             size="lg"
-            className="w-full"
+            className="w-full gap-2"
+            onClick={() => {
+              onOpenChange(false);
+              onEmailSignup?.();
+            }}
+          >
+            <Mail className="h-4 w-4" />
+            Sign up with email →
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full text-muted-foreground"
             onClick={() => {
               onOpenChange(false);
               onSeePricing();

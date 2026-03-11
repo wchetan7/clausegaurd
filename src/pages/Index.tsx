@@ -58,7 +58,7 @@ const Index = () => {
       <Footer />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
       <GuestUploadModal open={guestUploadOpen} onOpenChange={setGuestUploadOpen} onResult={handleGuestResult} onSignIn={handleSignIn} />
-      <FreeScanLimitModal open={limitOpen} onOpenChange={setLimitOpen} onSeePricing={handleSeePricing} />
+      <FreeScanLimitModal open={limitOpen} onOpenChange={setLimitOpen} onSeePricing={handleSeePricing} onEmailSignup={handleSignupClick} />
     </div>
   );
 };
