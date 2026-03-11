@@ -53,7 +53,7 @@ const Index = () => {
         <DemoSection onStartTrial={handleScanClick} />
         <SocialProof />
         <HowItWorks />
-        <Pricing onStartTrial={handleSignupClick} />
+        <Pricing onStartTrial={handleScanClick} />
       </main>
       <Footer />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
