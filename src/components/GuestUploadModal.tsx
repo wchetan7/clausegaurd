@@ -8,6 +8,15 @@ import { useToast } from "@/hooks/use-toast";
 import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
 import { isAcceptedFile, extractFileText } from "@/lib/extractText";
 
+interface GuestUploadModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onResult: (analysis: any, contractName: string) => void;
+  onSignIn?: () => void;
+}
+
+type Stage = "form" | "extracting" | "analyzing" | "success" | "error";
+
 const GUEST_SCAN_KEY = "contractowl_guest_scans";
 
 export function getGuestScanCount(): number {

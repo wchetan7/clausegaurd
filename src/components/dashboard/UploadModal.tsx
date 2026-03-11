@@ -10,6 +10,16 @@ import { useToast } from "@/hooks/use-toast";
 import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
 import { isAcceptedFile, extractFileText } from "@/lib/extractText";
 
+interface UploadModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  userId: string;
+  userPlan?: string;
+  onSuccess: () => void;
+}
+
+type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
+
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
