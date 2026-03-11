@@ -6,29 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle, Shield, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
-
-interface GuestUploadModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onResult: (analysis: any, contractName: string) => void;
-  onSignIn?: () => void;
-}
-
-type Stage = "form" | "extracting" | "analyzing" | "success" | "error";
-
-async function extractPdfText(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const pages: string[] = [];
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    pages.push(content.items.map((item: any) => item.str).join(" "));
-  }
-  return pages.join("\n\n");
-}
+import { isAcceptedFile, extractFileText } from "@/lib/extractText";
 
 const GUEST_SCAN_KEY = "contractowl_guest_scans";
 
