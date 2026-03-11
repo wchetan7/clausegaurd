@@ -36,6 +36,7 @@ const ContractAnalysis = () => {
   const [clauses, setClauses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [reminderSet, setReminderSet] = useState(false);
+  const [userPlan, setUserPlan] = useState<string>("starter");
   const { toast } = useToast();
 
   useEffect(() => {
