@@ -19,7 +19,7 @@ const plans = [
     price: "$59",
     period: "/mo",
     description: "For growing small businesses",
-    features: ["20 contracts/month", "Everything in Starter", "Calendar reminders", "Priority support", "Clause library"],
+    features: ["20 contracts/month", "Everything in Starter", "Calendar reminders", "Priority support", "Contract ownership", "Backup notifications"],
     popular: true,
   },
   {

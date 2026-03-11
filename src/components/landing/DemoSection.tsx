@@ -22,6 +22,13 @@ const clauses = [
     tagClass: "bg-destructive/20 text-destructive border-destructive/30",
   },
   {
+    type: "⚠️ Cancellation Deadline",
+    severity: "URGENT",
+    summary: "Cancellation Deadline: Jan 30, 2026 — Act before this date or you are locked in for another 12 months.",
+    tag: "🟠 URGENT",
+    tagClass: "bg-orange-500/20 text-orange-500 border-orange-500/30",
+  },
+  {
     type: "Early Termination Fee",
     severity: "HIGH",
     summary: "Early exit requires payment of 100% of the remaining contract value. No partial refunds available.",
