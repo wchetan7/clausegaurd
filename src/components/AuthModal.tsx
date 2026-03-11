@@ -31,14 +31,25 @@ const AuthModal = ({ open, onOpenChange, defaultMode = "signup" }: AuthModalProp
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const [googleTimedOut, setGoogleTimedOut] = useState(false);
+
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
+    setGoogleTimedOut(false);
+
+    const timeout = setTimeout(() => {
+      setGoogleTimedOut(true);
+      setGoogleLoading(false);
+    }, 15000);
+
     try {
       const { error } = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
+      clearTimeout(timeout);
       if (error) throw error;
     } catch (err: any) {
+      clearTimeout(timeout);
       toast({ title: "Error", description: err.message, variant: "destructive" });
       setGoogleLoading(false);
     }
