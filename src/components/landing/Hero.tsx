@@ -18,24 +18,19 @@ const Hero = ({ onStartTrial, onSignup }: HeroProps) => {
         </div>
         
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-6 animate-slide-up">
-          You Shouldn't Need a Lawyer to{" "}
-          <span className="text-gradient">Understand What You're Signing</span>
+          Most Contract Renewals Aren't{" "}
+          <span className="text-gradient">Decisions. They're Defaults.</span>
         </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          ContractOwl reads your vendor contracts and explains every risky clause in plain English — before you're trapped by one.
+          ContractOwl flags every auto-renewal trap, hidden fee and cancellation deadline before the clock runs out.
         </p>
         
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "0.2s" }}>
+        <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
           <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>
             Scan My Contract Free
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          {onSignup && (
-            <Button size="lg" variant="outline" className="text-base px-8 h-12" onClick={onSignup}>
-              Get Started Free
-            </Button>
-          )}
         </div>
         <p className="text-sm text-muted-foreground mt-4">Trusted by freelancers and consultants. No credit card required.</p>
       </div>
