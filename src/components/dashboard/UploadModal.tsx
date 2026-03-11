@@ -148,7 +148,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
                 <input
                   id="file-input"
                   type="file"
-                  accept=".pdf"
+                  accept=".pdf,.docx"
                   className="hidden"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                 />
