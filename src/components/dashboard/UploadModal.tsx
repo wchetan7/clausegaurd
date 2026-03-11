@@ -161,7 +161,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
                   <>
                     <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      Drag & drop PDF or{" "}
+                     Drag & drop PDF or DOCX or{" "}
                       <span className="text-primary font-medium">browse</span>
                     </p>
                   </>

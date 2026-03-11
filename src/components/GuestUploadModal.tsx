@@ -141,7 +141,7 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
                   <>
                     <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
-                      Drag & drop PDF or{" "}
+                     Drag & drop PDF or DOCX or{" "}
                       <span className="text-primary font-medium">browse</span>
                     </p>
                   </>
