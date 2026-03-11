@@ -8,30 +8,7 @@ import { Upload, FileText, Loader2, CheckCircle2, AlertTriangle } from "lucide-r
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { isLikelyContract, NOT_A_CONTRACT_MSG } from "@/lib/validateContract";
-
-interface UploadModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  userId: string;
-  userPlan?: string;
-  onSuccess: () => void;
-}
-
-type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
-
-async function extractPdfText(file: File): Promise<string> {
-  const pdfjsLib = await import("pdfjs-dist");
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const pages: string[] = [];
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    pages.push(content.items.map((item: any) => item.str).join(" "));
-  }
-  return pages.join("\n\n");
-}
+import { isAcceptedFile, extractFileText } from "@/lib/extractText";
 
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
   const [stage, setStage] = useState<Stage>("form");
