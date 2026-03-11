@@ -31,14 +31,25 @@ const AuthModal = ({ open, onOpenChange, defaultMode = "signup" }: AuthModalProp
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const [googleTimedOut, setGoogleTimedOut] = useState(false);
+
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
+    setGoogleTimedOut(false);
+
+    const timeout = setTimeout(() => {
+      setGoogleTimedOut(true);
+      setGoogleLoading(false);
+    }, 15000);
+
     try {
       const { error } = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
       });
+      clearTimeout(timeout);
       if (error) throw error;
     } catch (err: any) {
+      clearTimeout(timeout);
       toast({ title: "Error", description: err.message, variant: "destructive" });
       setGoogleLoading(false);
     }
@@ -103,8 +114,20 @@ const AuthModal = ({ open, onOpenChange, defaultMode = "signup" }: AuthModalProp
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
             )}
-            Continue with Google
+            {googleLoading ? "Connecting..." : "Continue with Google"}
           </Button>
+
+          {googleLoading && (
+            <p className="text-xs text-muted-foreground text-center animate-pulse">
+              This may take a few seconds
+            </p>
+          )}
+
+          {googleTimedOut && (
+            <p className="text-xs text-destructive text-center">
+              Connection timed out. Try email login instead.
+            </p>
+          )}
 
           {/* Divider */}
           <div className="relative">
