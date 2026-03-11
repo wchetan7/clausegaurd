@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 
 interface DemoSectionProps {
   onStartTrial: () => void;
+  onSignup: () => void;
 }
 
 const clauses = [
