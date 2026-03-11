@@ -32,7 +32,7 @@ const Hero = ({ onStartTrial, onSignup }: HeroProps) => {
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground mt-4">Trusted by freelancers and consultants. No credit card required.</p>
+        <p className="text-sm text-muted-foreground mt-4">No credit card required. Cancel anytime.</p>
       </div>
     </section>
   );
