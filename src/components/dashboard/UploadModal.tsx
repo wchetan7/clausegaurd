@@ -46,7 +46,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     e.preventDefault();
     setDragOver(false);
     const f = e.dataTransfer.files[0];
-    if (f?.type === "application/pdf") setFile(f);
+    if (f && isAcceptedFile(f)) setFile(f);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
