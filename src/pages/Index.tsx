@@ -30,7 +30,7 @@ const Index = () => {
   };
 
   const handleSignupClick = () => {
-    posthog?.capture("signup_clicked");
+    window.posthog?.capture("signup_clicked");
     setAuthMode("signup");
     setAuthOpen(true);
   };
