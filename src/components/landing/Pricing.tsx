@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { usePostHog } from "@posthog/react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -35,7 +34,7 @@ const plans = [
 ];
 
 const Pricing = ({ onStartTrial }: PricingProps) => {
-  const posthog = usePostHog();
+  
   const sectionRef = useRef<HTMLElement>(null);
   const tracked = useRef(false);
 
@@ -46,14 +45,14 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
       ([entry]) => {
         if (entry.isIntersecting && !tracked.current) {
           tracked.current = true;
-          posthog?.capture("pricing_viewed");
+          (window as any).posthog?.capture("pricing_viewed");
         }
       },
       { threshold: 0.3 }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [posthog]);
+  }, []);
 
   return (
     <section id="pricing" ref={sectionRef} className="py-24 border-t border-border/50">

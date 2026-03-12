@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePostHog } from "@posthog/react";
+
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import DemoSection from "@/components/landing/DemoSection";
@@ -19,7 +19,7 @@ const Index = () => {
   const [guestUploadOpen, setGuestUploadOpen] = useState(false);
   const [limitOpen, setLimitOpen] = useState(false);
   const navigate = useNavigate();
-  const posthog = usePostHog();
+  
 
   const handleScanClick = () => {
     if (getGuestScanCount() >= 3) {
@@ -30,13 +30,13 @@ const Index = () => {
   };
 
   const handleSignupClick = () => {
-    posthog?.capture("signup_clicked");
+    (window as any).posthog?.capture("signup_clicked");
     setAuthMode("signup");
     setAuthOpen(true);
   };
 
   const handleGuestResult = (analysis: any, contractName: string) => {
-    posthog?.capture("guest_scan_completed", { contractName });
+    (window as any).posthog?.capture("guest_scan_completed", { contractName });
     navigate("/guest-report", { state: { analysis, contractName } });
   };
 

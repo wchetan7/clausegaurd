@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePostHog } from "@posthog/react";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ interface UploadModalProps {
 type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
 
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
-  const posthog = usePostHog();
+  
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
@@ -114,7 +114,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
       }
 
       setStage("success");
-      posthog?.capture("contract_uploaded", { contractName: name || file?.name });
+      (window as any).posthog?.capture("contract_uploaded", { contractName: name || file?.name });
       onSuccess();
     } catch (err: any) {
       console.error("Upload error:", err);
