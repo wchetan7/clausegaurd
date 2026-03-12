@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePostHog } from "@posthog/react";
+
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import DemoSection from "@/components/landing/DemoSection";
