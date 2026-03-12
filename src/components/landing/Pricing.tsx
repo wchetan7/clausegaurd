@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useEffect, useRef } from "react";
 import { usePostHog } from "@posthog/react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
