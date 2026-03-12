@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import { usePostHog } from "@posthog/react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -33,8 +35,28 @@ const plans = [
 ];
 
 const Pricing = ({ onStartTrial }: PricingProps) => {
+  const posthog = usePostHog();
+  const sectionRef = useRef<HTMLElement>(null);
+  const tracked = useRef(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !tracked.current) {
+          tracked.current = true;
+          posthog?.capture("pricing_viewed");
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [posthog]);
+
   return (
-    <section id="pricing" className="py-24 border-t border-border/50">
+    <section id="pricing" ref={sectionRef} className="py-24 border-t border-border/50">
       <div className="container">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4">Simple, Transparent Pricing</h2>
