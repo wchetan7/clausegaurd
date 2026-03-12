@@ -12,7 +12,7 @@ const posthogOptions = {
 
 createRoot(document.getElementById("root")!).render(
   <PostHogProvider
-    apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
+    apiKey={POSTHOG_KEY}
     options={posthogOptions}
   >
     <App />
