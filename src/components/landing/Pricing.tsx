@@ -34,7 +34,7 @@ const plans = [
 ];
 
 const Pricing = ({ onStartTrial }: PricingProps) => {
-  const posthog = usePostHog();
+  
   const sectionRef = useRef<HTMLElement>(null);
   const tracked = useRef(false);
 
