@@ -36,6 +36,7 @@ const Index = () => {
   };
 
   const handleGuestResult = (analysis: any, contractName: string) => {
+    posthog?.capture("guest_scan_completed", { contractName });
     navigate("/guest-report", { state: { analysis, contractName } });
   };
 
