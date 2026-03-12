@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { usePostHog } from "@posthog/react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
