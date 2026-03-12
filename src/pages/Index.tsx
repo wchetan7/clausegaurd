@@ -19,6 +19,7 @@ const Index = () => {
   const [guestUploadOpen, setGuestUploadOpen] = useState(false);
   const [limitOpen, setLimitOpen] = useState(false);
   const navigate = useNavigate();
+  const posthog = usePostHog();
 
   const handleScanClick = () => {
     if (getGuestScanCount() >= 3) {
