@@ -113,6 +113,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
       }
 
       setStage("success");
+      posthog?.capture("contract_uploaded", { contractName: name || file?.name });
       onSuccess();
     } catch (err: any) {
       console.error("Upload error:", err);
