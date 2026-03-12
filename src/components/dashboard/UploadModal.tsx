@@ -22,7 +22,7 @@ interface UploadModalProps {
 type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
 
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
-  const posthog = usePostHog();
+  
   const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");

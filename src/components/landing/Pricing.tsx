@@ -52,7 +52,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [posthog]);
+  }, []);
 
   return (
     <section id="pricing" ref={sectionRef} className="py-24 border-t border-border/50">
