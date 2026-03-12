@@ -45,7 +45,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
       ([entry]) => {
         if (entry.isIntersecting && !tracked.current) {
           tracked.current = true;
-          window.posthog?.capture("pricing_viewed");
+          (window as any).posthog?.capture("pricing_viewed");
         }
       },
       { threshold: 0.3 }
