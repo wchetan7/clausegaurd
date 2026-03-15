@@ -3,10 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
-import DemoSection from "@/components/landing/DemoSection";
-import SocialProof from "@/components/landing/SocialProof";
+import MetricsBar from "@/components/landing/MetricsBar";
 import HowItWorks from "@/components/landing/HowItWorks";
+import Features from "@/components/landing/Features";
+import PainSection from "@/components/landing/PainSection";
+import DemoSection from "@/components/landing/DemoSection";
+import TrustSection from "@/components/landing/TrustSection";
 import Pricing from "@/components/landing/Pricing";
+import FAQ from "@/components/landing/FAQ";
 import Footer from "@/components/landing/Footer";
 import AuthModal from "@/components/AuthModal";
 import GuestUploadModal from "@/components/GuestUploadModal";
@@ -19,7 +23,6 @@ const Index = () => {
   const [guestUploadOpen, setGuestUploadOpen] = useState(false);
   const [limitOpen, setLimitOpen] = useState(false);
   const navigate = useNavigate();
-  
 
   const handleScanClick = () => {
     if (getGuestScanCount() >= 3) {
@@ -54,10 +57,14 @@ const Index = () => {
       <Header onStartTrial={handleSignupClick} />
       <main>
         <Hero onStartTrial={handleScanClick} onSignup={handleSignupClick} />
-        <DemoSection onStartTrial={handleScanClick} onSignup={handleSignupClick} />
-        <SocialProof />
+        <MetricsBar />
         <HowItWorks />
+        <Features />
+        <PainSection />
+        <DemoSection onStartTrial={handleScanClick} onSignup={handleSignupClick} />
+        <TrustSection />
         <Pricing onStartTrial={handleScanClick} />
+        <FAQ />
       </main>
       <Footer />
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />

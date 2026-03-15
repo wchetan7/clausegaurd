@@ -32,6 +32,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/how-contractowl-works" element={<BlogPost />} />
           <Route path="/guest-report" element={<GuestReport />} />
+          <Route path="/security" element={<Security />} />
           <Route element={<AuthenticatedLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/contracts/:id" element={<ContractAnalysis />} />

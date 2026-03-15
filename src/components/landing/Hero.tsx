@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lock, Ban, Bot, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeroProps {
@@ -6,33 +6,49 @@ interface HeroProps {
   onSignup?: () => void;
 }
 
-const Hero = ({ onStartTrial, onSignup }: HeroProps) => {
+const trustItems = [
+  { icon: Lock, label: "256-bit Encrypted" },
+  { icon: Ban, label: "Never Sold or Shared" },
+  { icon: Bot, label: "Not Used for AI Training" },
+  { icon: Trash2, label: "Delete Anytime" },
+];
+
+const Hero = ({ onStartTrial }: HeroProps) => {
   return (
     <section className="relative pt-32 pb-20 overflow-hidden">
-      {/* Glow effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
-      
+
       <div className="container relative text-center max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary mb-8 animate-fade-in">
-          Built for freelancers & small teams 🦉
-        </div>
-        
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-6 animate-slide-up">
-          Most Contract Renewals Aren't{" "}
-          <span className="text-gradient">Decisions. They're Defaults.</span>
+          Know What Your Vendors Are{" "}
+          <span className="text-gradient">Actually Costing You</span>
         </h1>
-        
+
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          Upload any vendor contract → get a plain English risk report in 60 seconds → never miss a cancellation deadline again.
+          ContractOwl scans your vendor contracts and shows your total committed spend, upcoming renewals, and where you're overpaying — before it costs you.
         </p>
-        
+
         <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
           <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>
-            Scan My Contract Free
+            Scan Your First Contract Free
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground mt-4">No credit card required. Cancel anytime.</p>
+
+        <p className="text-sm text-muted-foreground mt-4 mb-8">No signup needed. Results in 60 seconds.</p>
+
+        {/* Trust Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          {trustItems.map((item, i) => (
+            <div key={item.label} className="flex items-center gap-1.5 text-xs text-muted-foreground/70 px-3">
+              <item.icon className="h-3.5 w-3.5" />
+              <span>{item.label}</span>
+              {i < trustItems.length - 1 && (
+                <span className="hidden md:inline ml-3 text-border">|</span>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

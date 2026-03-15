@@ -9,14 +9,17 @@ const Footer = () => {
             <img src="/logo-owl.png" alt="ContractOwl" className="h-5 w-5" />
             <span className="font-bold">ContractOwl</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
+            <Link to="/security" className="hover:text-foreground transition-colors">Security</Link>
             <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
             <Link to="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</Link>
+            <Link to="/security#delete" className="hover:text-foreground transition-colors">Delete My Data</Link>
             <Link to="/blog" className="hover:text-foreground transition-colors">Blog</Link>
-            <a href="#" className="hover:text-foreground transition-colors">Support</a>
           </div>
-          <p className="text-xs text-muted-foreground">© 2026 ContractOwl. All rights reserved.</p>
         </div>
+        <p className="text-xs text-muted-foreground text-center mt-6">
+          ContractOwl — Vendor Cost Control for Small Business | SOC 2 in progress
+        </p>
       </div>
     </footer>
   );

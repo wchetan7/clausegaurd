@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface HeaderProps {
   onStartTrial: () => void;
@@ -13,9 +14,9 @@ const Header = ({ onStartTrial }: HeaderProps) => {
           <span className="text-xl font-bold tracking-tight text-foreground">ContractOwl</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
-          <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
+          <a href="#features" className="hover:text-foreground transition-colors">Features</a>
           <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
-          <a href="/blog" className="hover:text-foreground transition-colors">Blog</a>
+          <Link to="/security" className="hover:text-foreground transition-colors">Security</Link>
         </nav>
         <Button onClick={onStartTrial} size="sm">
           Start Free Trial
