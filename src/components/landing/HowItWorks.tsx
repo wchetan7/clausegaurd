@@ -1,29 +1,23 @@
-import { Upload, Cpu, FileCheck, Bell } from "lucide-react";
+import { Upload, Cpu, BarChart3 } from "lucide-react";
 
 const steps = [
   {
     icon: Upload,
     step: "01",
-    title: "Upload Your Contract",
-    description: "Drag and drop your vendor contract PDF — we'll handle the rest.",
+    title: "Upload your vendor contract",
+    description: "PDF or paste text — we'll handle the rest.",
   },
   {
     icon: Cpu,
     step: "02",
-    title: "AI Scans for Risky Clauses",
-    description: "Our AI reads every clause, identifying auto-renewals, hidden fees, and termination traps.",
+    title: "ContractOwl extracts everything",
+    description: "Costs, dates, renewal terms, and risky clauses — extracted automatically.",
   },
   {
-    icon: FileCheck,
+    icon: BarChart3,
     step: "03",
-    title: "Get Plain English Risk Report",
-    description: "Receive a color-coded risk report that explains every dangerous clause in simple language.",
-  },
-  {
-    icon: Bell,
-    step: "04",
-    title: "Get Email Reminders",
-    description: "Automatic email alerts at 90, 60, and 30 days before renewal deadlines — never miss a cancellation window.",
+    title: "See where to save money",
+    description: "Your total vendor spend, renewal calendar, and cost-saving opportunities in one view.",
   },
 ];
 
@@ -32,13 +26,10 @@ const HowItWorks = () => {
     <section id="how-it-works" className="py-24 border-t border-border/50">
       <div className="container">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-black mb-4">How It Works</h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Four simple steps to protect your business from contract traps.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-black mb-4">From contract to cost clarity in 3 steps</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {steps.map((s) => (
             <div
               key={s.step}

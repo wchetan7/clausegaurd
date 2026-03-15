@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import GuestReport from "./pages/GuestReport";
+import Security from "./pages/Security";
 import AuthenticatedLayout from "./components/layouts/AuthenticatedLayout";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/how-contractowl-works" element={<BlogPost />} />
           <Route path="/guest-report" element={<GuestReport />} />
+          <Route path="/security" element={<Security />} />
           <Route element={<AuthenticatedLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/contracts/:id" element={<ContractAnalysis />} />

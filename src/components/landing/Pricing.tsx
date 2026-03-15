@@ -8,19 +8,19 @@ interface PricingProps {
 
 const plans = [
   {
-    name: "Starter",
-    price: "$29",
-    period: "/mo",
-    description: "For freelancers & solo businesses",
-    features: ["5 contracts/month", "Risk reports", "Email alerts", "PDF exports"],
+    name: "Free",
+    price: "$0",
+    period: "",
+    description: "Scan up to 3 contracts. See your first cost projection free.",
+    features: ["3 contracts", "Cost projection", "Risk reports", "Cancel-by dates"],
     popular: false,
   },
   {
     name: "Pro",
     price: "$59",
     period: "/mo",
-    description: "For growing small businesses",
-    features: ["20 contracts/month", "Everything in Starter", "Calendar reminders", "Priority support", "Contract ownership", "Backup notifications"],
+    description: "Full vendor cost control. Unlimited contracts, renewal calendar, and AI generators.",
+    features: ["Unlimited contracts", "12-month cost projections", "Renewal calendar", "Cancel-by alerts", "Cancellation letter generator", "Negotiation email generator"],
     popular: true,
   },
   {
@@ -28,13 +28,12 @@ const plans = [
     price: "$149",
     period: "/mo",
     description: "For teams that handle many vendors",
-    features: ["Unlimited contracts", "Everything in Pro", "Team sharing 🔜", "Custom rules 🔜", "API access 🔜", "Dedicated CSM"],
+    features: ["Everything in Pro", "Team sharing 🔜", "Custom rules 🔜", "API access 🔜", "Vendor spend dashboard", "Dedicated CSM"],
     popular: false,
   },
 ];
 
 const Pricing = ({ onStartTrial }: PricingProps) => {
-  
   const sectionRef = useRef<HTMLElement>(null);
   const tracked = useRef(false);
 
@@ -81,7 +80,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
               <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
               <div className="flex items-baseline gap-1 mb-6">
                 <span className="text-4xl font-black">{plan.price}</span>
-                <span className="text-muted-foreground text-sm">{plan.period}</span>
+                {plan.period && <span className="text-muted-foreground text-sm">{plan.period}</span>}
               </div>
               <ul className="space-y-3 mb-8 flex-1">
                 {plan.features.map((f) => (
@@ -96,11 +95,15 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
                 className="w-full"
                 onClick={onStartTrial}
               >
-                Start Free Trial — 3 Contracts Free
+                {plan.price === "$0" ? "Scan Free" : "Start Free Trial"}
               </Button>
             </div>
           ))}
         </div>
+
+        <p className="text-center text-xs text-muted-foreground mt-8">
+          Your contracts are processed by Claude AI and never used for model training.
+        </p>
       </div>
     </section>
   );

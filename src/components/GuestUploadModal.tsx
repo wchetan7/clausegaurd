@@ -178,7 +178,7 @@ const GuestUploadModal = ({ open, onOpenChange, onResult, onSignIn }: GuestUploa
               )}
 
               <p className="text-xs text-center text-muted-foreground">
-                Your document is processed securely and never stored.
+                Your contract is encrypted on upload and never used to train AI models. Delete anytime.
               </p>
             </form>
 
