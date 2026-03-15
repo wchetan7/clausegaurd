@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import GuestReport from "./pages/GuestReport";
+import Security from "./pages/Security";
 import AuthenticatedLayout from "./components/layouts/AuthenticatedLayout";
 
 const queryClient = new QueryClient();
