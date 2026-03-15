@@ -53,6 +53,11 @@ const Index = () => {
     document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleSampleScan = () => {
+    (window as any).posthog?.capture("sample_scan_clicked");
+    navigate("/guest-report", { state: { analysis: sampleAnalysis, contractName: "CloudBase Software Agreement" } });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header onStartTrial={handleSignupClick} />
