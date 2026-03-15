@@ -26,7 +26,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   const handleScanClick = () => {
-    if (getGuestScanCount() >= 3) {
+    if (getGuestScanCount() >= 5) {
       setLimitOpen(true);
     } else {
       setGuestUploadOpen(true);
