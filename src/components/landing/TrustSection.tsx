@@ -1,4 +1,4 @@
-import { Lock, Bot, User, Ban } from "lucide-react";
+import { Lock, Bot, User, Ban, Server } from "lucide-react";
 
 const cards = [
   {
@@ -20,6 +20,11 @@ const cards = [
     icon: Ban,
     title: "Never Shared",
     description: "Your vendor names, pricing, and contract terms are never shared with any third party. Ever.",
+  },
+  {
+    icon: Server,
+    title: "Hosted Securely on AWS",
+    description: "Your data is stored on AWS US-East with no cross-border transfers. Fully compliant with standard vendor NDA requirements.",
   },
 ];
 
