@@ -1,13 +1,54 @@
-import { AlertTriangle, Lock } from "lucide-react";
+import { AlertTriangle, Lock, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 interface DemoSectionProps {
   onStartTrial: () => void;
   onSignup: () => void;
+  onSampleScan?: () => void;
 }
 
-const clauses = [
+const sampleAnalysis = {
+  risk_score: "HIGH",
+  vendor_name: "CloudBase Inc.",
+  contract_value: 24000,
+  renewal_date: "2026-03-31",
+  cancellation_deadline: "2026-01-30",
+  auto_renewal: true,
+  notice_period_days: 60,
+  clauses: [
+    {
+      clause_type: "Auto-Renewal",
+      severity: "high",
+      summary: "Contract automatically renews for 12 months unless cancelled with 60 days written notice before the renewal date.",
+      raw_text: "This Agreement shall automatically renew for successive twelve (12) month periods unless either party provides written notice of non-renewal at least sixty (60) days prior to the end of the then-current term.",
+      action_required: "Send cancellation notice before Jan 30, 2026",
+    },
+    {
+      clause_type: "Price Escalation",
+      severity: "high",
+      summary: "Vendor may increase pricing by up to 15% annually without prior approval. Increases take effect automatically at each renewal.",
+      raw_text: "Licensor reserves the right to increase subscription fees by up to fifteen percent (15%) upon each renewal period.",
+      action_required: "Negotiate price cap before renewal",
+    },
+    {
+      clause_type: "Cancellation Deadline",
+      severity: "high",
+      summary: "Cancellation Deadline: Jan 30, 2026 — Act before this date or you are locked in for another 12 months.",
+      raw_text: "Written notice of non-renewal must be received at least sixty (60) days prior to the renewal date.",
+      action_required: "Mark calendar for Jan 30, 2026",
+    },
+    {
+      clause_type: "Early Termination Fee",
+      severity: "high",
+      summary: "Early exit requires payment of 100% of the remaining contract value. No partial refunds available.",
+      raw_text: "In the event of early termination by the Licensee, the Licensee shall pay the full remaining balance of the contract term.",
+      action_required: "Avoid early termination — wait for renewal window",
+    },
+  ],
+};
+
+const clauseDisplay = [
   {
     type: "Auto-Renewal",
     severity: "HIGH",
@@ -21,6 +62,7 @@ const clauses = [
     summary: "Vendor may increase pricing by up to 15% annually without prior approval. Increases take effect automatically at each renewal.",
     tag: "🔴 HIGH RISK",
     tagClass: "bg-destructive/20 text-destructive border-destructive/30",
+    showNegotiationCta: true,
   },
   {
     type: "⚠️ Cancellation Deadline",
@@ -38,7 +80,13 @@ const clauses = [
   },
 ];
 
-const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
+const DemoSection = ({ onStartTrial, onSignup, onSampleScan }: DemoSectionProps) => {
+  const handleSampleScan = () => {
+    if (onSampleScan) {
+      onSampleScan();
+    }
+  };
+
   return (
     <section className="py-20 border-t border-border/50">
       <div className="container max-w-3xl mx-auto">
@@ -62,7 +110,7 @@ const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
 
           {/* Clauses */}
           <div className="divide-y divide-border/30">
-            {clauses.map((clause, i) => (
+            {clauseDisplay.map((clause, i) => (
               <div key={i} className="p-5 hover:bg-secondary/20 transition-colors">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="font-semibold text-sm">{clause.type}</span>
@@ -71,10 +119,19 @@ const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">{clause.summary}</p>
+                {clause.showNegotiationCta && (
+                  <button
+                    onClick={onSignup}
+                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-emerald-500 hover:text-emerald-400 transition-colors"
+                  >
+                    <ArrowRight className="h-3 w-3" />
+                    Draft negotiation email
+                  </button>
+                )}
               </div>
             ))}
 
-            {/* Blurred 4th clause */}
+            {/* Blurred 5th clause */}
             <div className="relative p-5">
               <div className="blur-sm select-none pointer-events-none">
                 <div className="flex items-center gap-3 mb-2">
@@ -96,9 +153,22 @@ const DemoSection = ({ onStartTrial, onSignup }: DemoSectionProps) => {
             </div>
           </div>
         </div>
+
+        {/* Sample scan CTA */}
+        <div className="text-center mt-6">
+          <Button
+            variant="outline"
+            className="gap-2 text-sm"
+            onClick={handleSampleScan}
+          >
+            <ArrowRight className="h-4 w-4" />
+            Try it with this sample contract
+          </Button>
+        </div>
       </div>
     </section>
   );
 };
 
+export { sampleAnalysis };
 export default DemoSection;

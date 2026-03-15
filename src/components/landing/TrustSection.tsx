@@ -36,7 +36,7 @@ const TrustSection = () => {
           <h2 className="text-3xl md:text-4xl font-black mb-4">Your contracts stay private</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
           {cards.map((c) => (
             <div
               key={c.title}

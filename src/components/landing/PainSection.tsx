@@ -1,10 +1,10 @@
 import { X, Check } from "lucide-react";
 
 const before = [
-  "Renewal dates buried in PDFs",
-  "No idea what you're committed to next quarter",
-  "Auto-renewals triggering without warning",
   "No leverage when renegotiating",
+  "Auto-renewals triggering without warning",
+  "No idea what you're committed to next quarter",
+  "Renewal dates buried in PDFs",
 ];
 
 const after = [
