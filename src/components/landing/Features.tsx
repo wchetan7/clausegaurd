@@ -1,35 +1,42 @@
 import { BarChart3, Bell, Clock, FileText, Mail, Wallet } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const features = [
   {
     icon: BarChart3,
     title: "Cost Projection",
     description: "See your total committed vendor spend for the next 12 months across all contracts.",
+    badge: null,
   },
   {
     icon: Bell,
     title: "Renewal Alerts",
     description: "Get notified before auto-renewals lock you in for another year.",
+    badge: null,
   },
   {
     icon: Clock,
     title: "Cancel-By Date Tracker",
     description: "Know the exact date you need to act — not just when the contract expires.",
+    badge: "most-missed" as const,
   },
   {
     icon: FileText,
     title: "Cancellation Letter Generator",
     description: "Generate a professional cancellation notice in one click.",
+    badge: "coming-soon" as const,
   },
   {
     icon: Mail,
     title: "Negotiation Email Generator",
     description: "Get AI-drafted negotiation emails with leverage points pulled from your contract.",
+    badge: "coming-soon" as const,
   },
   {
     icon: Wallet,
     title: "Vendor Spend Summary",
     description: "See all vendor costs in one dashboard — broken down by category and renewal date.",
+    badge: null,
   },
 ];
 
