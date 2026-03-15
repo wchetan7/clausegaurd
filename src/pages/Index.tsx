@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "@/components/landing/Header";
+import { sampleAnalysis } from "@/components/landing/DemoSection";
 import Hero from "@/components/landing/Hero";
 import MetricsBar from "@/components/landing/MetricsBar";
 import HowItWorks from "@/components/landing/HowItWorks";
