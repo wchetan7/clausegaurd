@@ -9,8 +9,12 @@ import {
 } from "@/components/ui/accordion";
 import {
   ArrowLeft, Download, Share2, Bell, AlertTriangle,
-  Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert, Calendar,
+  Clock, DollarSign, CalendarDays, RefreshCw, ShieldAlert, Calendar, Trash2,
 } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { format, addDays } from "date-fns";
 import { exportContractPdf } from "@/lib/exportContractPdf";
 import { buildGoogleCalendarUrl, downloadIcsFile } from "@/lib/calendarUtils";
