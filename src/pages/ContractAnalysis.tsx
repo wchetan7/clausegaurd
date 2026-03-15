@@ -315,6 +315,44 @@ const ContractAnalysis = () => {
       <div className="flex gap-3">
         <Button variant="outline" className="gap-2" onClick={() => exportContractPdf(contract, clauses)}><Download className="h-4 w-4" /> Download Report PDF</Button>
         <Button variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Share with Team</Button>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="gap-2 text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30">
+              <Trash2 className="h-4 w-4" /> Delete Contract
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-card border-border">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this contract?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete "{contract.name}" and all associated clauses and reminders. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={async () => {
+                  // Delete clauses, reminders, then contract
+                  await Promise.all([
+                    supabase.from("contract_clauses").delete().eq("contract_id", contract.id),
+                    supabase.from("reminders").delete().eq("contract_id", contract.id),
+                  ]);
+                  const { error } = await supabase.from("contracts").delete().eq("id", contract.id);
+                  if (error) {
+                    toast({ title: "Failed to delete contract", variant: "destructive" });
+                  } else {
+                    toast({ title: "Contract deleted" });
+                    navigate("/dashboard", { replace: true });
+                  }
+                }}
+              >
+                Delete Permanently
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
