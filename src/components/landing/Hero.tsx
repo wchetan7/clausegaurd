@@ -19,13 +19,21 @@ const Hero = ({ onStartTrial }: HeroProps) => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
       <div className="container relative text-center max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-6 animate-slide-up">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] mb-4 animate-slide-up">
           Know What Your Vendors Are{" "}
           <span className="text-gradient">Actually Costing You</span>
         </h1>
 
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          ContractOwl scans your vendor contracts and shows your total committed spend, upcoming renewals, and where you're overpaying — before it costs you.
+        <p className="text-sm text-muted-foreground/60 mb-6 animate-slide-up" style={{ animationDelay: "0.05s" }}>
+          Works with SaaS, service agreements, MSAs, and more.
+        </p>
+
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+          ContractOwl scans your vendor contracts and shows your total committed spend, upcoming renewals, and where you're overpaying — so nothing catches you off guard.
+        </p>
+
+        <p className="text-sm text-muted-foreground/50 mb-8 animate-slide-up" style={{ animationDelay: "0.15s" }}>
+          Trusted by 50+ founders and ops teams managing vendor contracts
         </p>
 
         <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>

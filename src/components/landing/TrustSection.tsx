@@ -1,4 +1,4 @@
-import { Lock, Bot, User, Ban } from "lucide-react";
+import { Lock, Bot, User, Ban, Server } from "lucide-react";
 
 const cards = [
   {
@@ -21,6 +21,11 @@ const cards = [
     title: "Never Shared",
     description: "Your vendor names, pricing, and contract terms are never shared with any third party. Ever.",
   },
+  {
+    icon: Server,
+    title: "Hosted Securely on AWS",
+    description: "Your data is stored on AWS US-East with no cross-border transfers. Fully compliant with standard vendor NDA requirements.",
+  },
 ];
 
 const TrustSection = () => {
@@ -31,7 +36,7 @@ const TrustSection = () => {
           <h2 className="text-3xl md:text-4xl font-black mb-4">Your contracts stay private</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
           {cards.map((c) => (
             <div
               key={c.title}

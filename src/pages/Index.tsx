@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "@/components/landing/Header";
+import { sampleAnalysis } from "@/components/landing/DemoSection";
 import Hero from "@/components/landing/Hero";
 import MetricsBar from "@/components/landing/MetricsBar";
 import HowItWorks from "@/components/landing/HowItWorks";
@@ -52,6 +53,11 @@ const Index = () => {
     document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleSampleScan = () => {
+    (window as any).posthog?.capture("sample_scan_clicked");
+    navigate("/guest-report", { state: { analysis: sampleAnalysis, contractName: "CloudBase Software Agreement" } });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header onStartTrial={handleSignupClick} />
@@ -61,7 +67,7 @@ const Index = () => {
         <HowItWorks />
         <Features />
         <PainSection />
-        <DemoSection onStartTrial={handleScanClick} onSignup={handleSignupClick} />
+        <DemoSection onStartTrial={handleScanClick} onSignup={handleSignupClick} onSampleScan={handleSampleScan} />
         <TrustSection />
         <Pricing onStartTrial={handleScanClick} />
         <FAQ />
