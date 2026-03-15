@@ -40,9 +40,9 @@ const FreeScanLimitModal = ({ open, onOpenChange, onSeePricing, onEmailSignup }:
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-card border-border text-center">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-black text-center">
-            You've used your 3 free scans 🦉
-          </DialogTitle>
+           <DialogTitle className="text-2xl font-black text-center">
+44:             You've used your 5 free scans 🦉
+45:           </DialogTitle>
         </DialogHeader>
         <p className="text-muted-foreground text-sm mt-2">
           Sign up free to get 3 more contracts/month or upgrade for unlimited access.
