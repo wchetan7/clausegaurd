@@ -35,19 +35,25 @@ const NegotiationLeveragePanel = ({ contracts, clauses, selectedVendor }: Negoti
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Find contracts with price escalation clauses
-  const escalationContracts = contracts
+  type EscalationContract = Contract & {
+    escalationClauses: Clause[];
+    maxPct: number;
+    maxIncrease: number;
+    annualValue: number;
+  };
+
+  const escalationContracts: EscalationContract[] = contracts
     .filter(c => c.status === "Reviewed")
     .filter(c => !selectedVendor || c.vendor === selectedVendor)
-    .map(c => {
+    .reduce<EscalationContract[]>((acc, c) => {
       const escalationClauses = clauses.filter(
         cl => cl.contract_id === c.id &&
           (cl.clause_type.toLowerCase().includes("price") ||
            cl.clause_type.toLowerCase().includes("escalation") ||
            cl.clause_type.toLowerCase().includes("increase"))
       );
-      if (escalationClauses.length === 0) return null;
+      if (escalationClauses.length === 0) return acc;
 
-      // Estimate max increase - look for percentages in clause text
       const percentMatch = escalationClauses
         .map(cl => cl.raw_text.match(/(\d+(?:\.\d+)?)\s*%/))
         .find(m => m);
@@ -55,15 +61,9 @@ const NegotiationLeveragePanel = ({ contracts, clauses, selectedVendor }: Negoti
       const annualValue = c.contract_value || 0;
       const maxIncrease = Math.round(annualValue * (maxPct / 100));
 
-      return {
-        ...c,
-        escalationClauses,
-        maxPct,
-        maxIncrease,
-        annualValue,
-      };
-    })
-    .filter(Boolean) as NonNullable<ReturnType<typeof Array.prototype.map>[number]>[];
+      acc.push({ ...c, escalationClauses, maxPct, maxIncrease, annualValue });
+      return acc;
+    }, []);
 
   const handleDraftEmail = async (contract: typeof escalationContracts[0]) => {
     setGeneratingFor(contract.id);

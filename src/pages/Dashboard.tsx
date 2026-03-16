@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Upload, BarChart3, FileText } from "lucide-react";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import ContractsTable from "@/components/dashboard/ContractsTable";
 import UploadModal from "@/components/dashboard/UploadModal";
+import FinancialDashboard from "@/components/dashboard/financial/FinancialDashboard";
 
 const Dashboard = () => {
   const { user } = useOutletContext<{ user: any }>();
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userPlan, setUserPlan] = useState("starter");
+  const [activeTab, setActiveTab] = useState<"contracts" | "financial">("financial");
 
   const fetchContracts = async () => {
     const { data } = await supabase
@@ -55,8 +57,44 @@ const Dashboard = () => {
         </Button>
       </div>
 
-      <SummaryCards contracts={contracts} />
-      <ContractsTable contracts={contracts} onUpload={() => setUploadOpen(true)} />
+      {/* Tab navigation */}
+      <div className="flex gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
+        <button
+          onClick={() => setActiveTab("financial")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+            activeTab === "financial"
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <BarChart3 className="h-4 w-4" />
+          Financial Intelligence
+        </button>
+        <button
+          onClick={() => setActiveTab("contracts")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+            activeTab === "contracts"
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <FileText className="h-4 w-4" />
+          Contracts
+        </button>
+      </div>
+
+      {activeTab === "contracts" ? (
+        <>
+          <SummaryCards contracts={contracts} />
+          <ContractsTable contracts={contracts} onUpload={() => setUploadOpen(true)} />
+        </>
+      ) : (
+        <FinancialDashboard
+          contracts={contracts}
+          onUpload={() => setUploadOpen(true)}
+          onRefresh={fetchContracts}
+        />
+      )}
 
       <UploadModal
         open={uploadOpen}
