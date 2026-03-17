@@ -1,8 +1,27 @@
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Shield, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Shield, AlertTriangle, CheckCircle2, Save, X } from "lucide-react";
+import AuthModal from "@/components/AuthModal";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+const PENDING_CONTRACT_KEY = "contractowl_pending_contract";
+
+export function getPendingContract() {
+  try {
+    const raw = sessionStorage.getItem(PENDING_CONTRACT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearPendingContract() {
+  sessionStorage.removeItem(PENDING_CONTRACT_KEY);
+}
 
 const severityConfig: Record<string, { color: string; icon: typeof AlertTriangle }> = {
   HIGH: { color: "destructive", icon: AlertTriangle },
@@ -13,7 +32,76 @@ const severityConfig: Record<string, { color: string; icon: typeof AlertTriangle
 const GuestReport = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { analysis, contractName } = (location.state as any) || {};
+
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signup");
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  // Save contract data to sessionStorage so it persists through auth
+  useEffect(() => {
+    if (analysis && contractName) {
+      sessionStorage.setItem(
+        PENDING_CONTRACT_KEY,
+        JSON.stringify({ contractName, analysis, savedAt: new Date().toISOString() })
+      );
+    }
+  }, [analysis, contractName]);
+
+  // Listen for auth state changes — auto-save pending contract when user signs in
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if ((event === "SIGNED_IN" || event === "TOKEN_REFRESHED") && session?.user && !saved) {
+        const pending = getPendingContract();
+        if (pending) {
+          try {
+            // Insert contract
+            const { data: contract, error: contractError } = await supabase
+              .from("contracts")
+              .insert({
+                user_id: session.user.id,
+                name: pending.contractName || "Untitled Contract",
+                vendor: pending.analysis?.vendor || pending.contractName || "Unknown Vendor",
+                risk_score: pending.analysis?.risk_score || "Low",
+                status: "Reviewed",
+                contract_value: pending.analysis?.contract_value || 0,
+                auto_renewal: pending.analysis?.auto_renewal || false,
+                renewal_date: pending.analysis?.renewal_date || null,
+                notice_period_days: pending.analysis?.notice_period_days || null,
+              })
+              .select("id")
+              .single();
+
+            if (contractError) throw contractError;
+
+            // Insert clauses
+            if (contract && pending.analysis?.clauses?.length) {
+              const clauseRows = pending.analysis.clauses.map((c: any) => ({
+                contract_id: contract.id,
+                clause_type: c.clause_type,
+                severity: c.severity || "LOW",
+                summary: c.summary,
+                raw_text: c.raw_text,
+                action_required: c.action_required || null,
+              }));
+              await supabase.from("contract_clauses").insert(clauseRows);
+            }
+
+            clearPendingContract();
+            setSaved(true);
+            toast({ title: "✅ Contract saved to your account", description: "View it anytime from your dashboard." });
+          } catch (err: any) {
+            console.error("Failed to save pending contract:", err);
+            toast({ title: "Couldn't auto-save contract", description: err.message, variant: "destructive" });
+          }
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [saved, toast]);
 
   if (!analysis) {
     return (
@@ -26,7 +114,12 @@ const GuestReport = () => {
     );
   }
 
-  const riskColor = analysis.risk_score === "High" ? "text-destructive" : analysis.risk_score === "Medium" ? "text-yellow-500" : "text-green-500";
+  const riskColor = analysis.risk_score === "High" ? "text-destructive" : analysis.risk_score === "Medium" ? "text-warning" : "text-primary";
+
+  const openAuth = (mode: "signin" | "signup") => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,6 +135,45 @@ const GuestReport = () => {
           </div>
         </div>
       </header>
+
+      {/* Sticky save banner for guests */}
+      {!bannerDismissed && !saved && (
+        <div className="sticky top-0 z-40 bg-primary/10 border-b border-primary/20 backdrop-blur-md">
+          <div className="container flex items-center justify-between py-3 gap-4">
+            <div className="flex items-center gap-3">
+              <Save className="h-4 w-4 text-primary shrink-0" />
+              <p className="text-sm font-medium text-foreground">
+                💾 Save your results — Sign up free to track this contract and all future renewals
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button size="sm" onClick={() => openAuth("signup")}>
+                Sign Up Free
+              </Button>
+              <button
+                onClick={() => setBannerDismissed(true)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {saved && (
+        <div className="sticky top-0 z-40 bg-primary/10 border-b border-primary/20 backdrop-blur-md">
+          <div className="container flex items-center gap-3 py-3">
+            <CheckCircle2 className="h-4 w-4 text-primary" />
+            <p className="text-sm font-medium text-foreground">
+              Contract saved to your account!
+            </p>
+            <Button size="sm" variant="outline" onClick={() => navigate("/dashboard")} className="ml-auto">
+              Go to Dashboard
+            </Button>
+          </div>
+        </div>
+      )}
 
       <main className="container max-w-4xl py-8 space-y-6">
         <div className="flex items-center justify-between">
@@ -81,16 +213,27 @@ const GuestReport = () => {
           })}
         </div>
 
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="py-6 text-center space-y-3">
-            <h3 className="font-bold text-lg">Want to save reports & get renewal reminders?</h3>
-            <p className="text-sm text-muted-foreground">Sign up to track contracts, get email alerts, and export PDF reports.</p>
-            <Button onClick={() => navigate("/")} size="lg">
-              Sign Up Free →
-            </Button>
-          </CardContent>
-        </Card>
+        {/* CTA card — opens modal instead of navigating */}
+        {!saved && (
+          <Card className="bg-primary/5 border-primary/20">
+            <CardContent className="py-6 text-center space-y-3">
+              <h3 className="font-bold text-lg">Want to save reports & get renewal reminders?</h3>
+              <p className="text-sm text-muted-foreground">Sign up to track contracts, get email alerts, and export PDF reports.</p>
+              <div className="flex items-center justify-center gap-3">
+                <Button onClick={() => openAuth("signup")} size="lg">
+                  Sign Up Free →
+                </Button>
+                <Button onClick={() => openAuth("signin")} variant="outline" size="lg">
+                  Sign In
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </main>
+
+      {/* Auth modal overlay — stays on same page */}
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
     </div>
   );
 };

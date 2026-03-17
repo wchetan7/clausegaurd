@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,8 +30,12 @@ const AuthModal = ({ open, onOpenChange, defaultMode = "signup" }: AuthModalProp
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [googleTimedOut, setGoogleTimedOut] = useState(false);
+
+  // Check if we're on the guest report page — if so, don't navigate away after auth
+  const isOnGuestReport = location.pathname === "/guest-report";
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
@@ -64,7 +68,10 @@ const AuthModal = ({ open, onOpenChange, defaultMode = "signup" }: AuthModalProp
         if (error) throw error;
         toast({ title: "Welcome back!" });
         onOpenChange(false);
-        navigate("/dashboard");
+        // Don't navigate away if on guest report — the page handles post-auth save
+        if (!isOnGuestReport) {
+          navigate("/dashboard");
+        }
       } else {
         const { error } = await supabase.auth.signUp({
           email,
