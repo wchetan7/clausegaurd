@@ -17,7 +17,7 @@ const features = [
   {
     icon: Clock,
     title: "Cancel-By Date Tracker",
-    description: "Know the exact date you need to act — not just when the contract expires.",
+    description: "Know the exact date you need to act — not just when the contract expires. Auto-renewal windows are typically 30–60 days before expiry. Miss it and you're locked in for another year.",
     badge: "most-missed" as const,
   },
   {

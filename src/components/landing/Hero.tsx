@@ -29,12 +29,26 @@ const Hero = ({ onStartTrial }: HeroProps) => {
         </p>
 
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          ContractOwl scans your vendor contracts and shows your total committed spend, upcoming renewals, and where you're overpaying — so nothing catches you off guard.
+          ContractOwl scans your vendor contracts and shows your total committed spend, cancel-by dates, auto-renewal risks, and exactly how much is at risk of locking you in — so nothing catches you off guard.
         </p>
 
-        <p className="text-sm text-muted-foreground/50 mb-8 animate-slide-up" style={{ animationDelay: "0.15s" }}>
-          Trusted by 50+ founders and ops teams managing vendor contracts
-        </p>
+        {/* Stat bar */}
+        <div className="flex items-center justify-center gap-4 md:gap-6 mb-8 animate-slide-up" style={{ animationDelay: "0.15s" }}>
+          <div className="text-center">
+            <span className="text-xl md:text-2xl font-black text-primary">$2.4M+</span>
+            <p className="text-xs text-muted-foreground">vendor spend tracked</p>
+          </div>
+          <span className="h-8 w-px bg-border" />
+          <div className="text-center">
+            <span className="text-xl md:text-2xl font-black text-primary">60 sec</span>
+            <p className="text-xs text-muted-foreground">average scan time</p>
+          </div>
+          <span className="h-8 w-px bg-border" />
+          <div className="text-center">
+            <span className="text-xl md:text-2xl font-black text-primary">50+</span>
+            <p className="text-xs text-muted-foreground">founders and ops teams</p>
+          </div>
+        </div>
 
         <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
           <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>

@@ -19,7 +19,7 @@ const plans = [
     name: "Pro",
     price: "$59",
     period: "/mo",
-    description: "Full vendor cost control. Unlimited contracts, renewal calendar, and AI generators.",
+    description: "Everything a founder or ops lead needs to stay on top of vendor spend, renewals, and risk. Unlimited contracts, renewal calendar, and AI-powered generators.",
     features: ["Unlimited contracts", "12-month cost projections", "Renewal calendar", "Cancel-by alerts", "Cancellation letter generator", "Negotiation email generator"],
     popular: true,
   },
@@ -59,6 +59,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4">Simple, Transparent Pricing</h2>
           <p className="text-muted-foreground text-lg">Start with 3 free contracts. Upgrade when you're ready.</p>
+          <p className="text-sm text-muted-foreground/70 mt-2">No long-term contracts. Cancel anytime. We'd never auto-renew you without warning — we know how that feels. 😄</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -101,7 +102,10 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
           ))}
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-8">
+        <p className="text-center text-sm text-muted-foreground mt-8">
+          Trusted by 50+ founders and ops teams. Average user finds $12,000+ in at-risk vendor spend in their first scan.
+        </p>
+        <p className="text-center text-xs text-muted-foreground/60 mt-2">
           Your contracts are processed by Claude AI and never used for model training.
         </p>
       </div>
