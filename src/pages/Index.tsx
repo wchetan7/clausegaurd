@@ -68,6 +68,7 @@ const Index = () => {
         <HowItWorks />
         <Features />
         <PainSection />
+        <CalloutBanner onStartTrial={handleScanClick} />
         <DemoSection onStartTrial={handleScanClick} onSignup={handleSignupClick} onSampleScan={handleSampleScan} />
         <TrustSection />
         <Pricing onStartTrial={handleScanClick} />
