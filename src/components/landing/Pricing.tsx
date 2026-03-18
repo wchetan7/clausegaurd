@@ -19,7 +19,7 @@ const plans = [
     name: "Pro",
     price: "$59",
     period: "/mo",
-    description: "Full vendor cost control. Unlimited contracts, renewal calendar, and AI generators.",
+    description: "Everything a founder or ops lead needs to stay on top of vendor spend, renewals, and risk. Unlimited contracts, renewal calendar, and AI-powered generators.",
     features: ["Unlimited contracts", "12-month cost projections", "Renewal calendar", "Cancel-by alerts", "Cancellation letter generator", "Negotiation email generator"],
     popular: true,
   },
