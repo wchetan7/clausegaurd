@@ -59,6 +59,7 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black mb-4">Simple, Transparent Pricing</h2>
           <p className="text-muted-foreground text-lg">Start with 3 free contracts. Upgrade when you're ready.</p>
+          <p className="text-sm text-muted-foreground/70 mt-2">No long-term contracts. Cancel anytime. We'd never auto-renew you without warning — we know how that feels. 😄</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
