@@ -7,6 +7,7 @@ import Hero from "@/components/landing/Hero";
 import MetricsBar from "@/components/landing/MetricsBar";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Features from "@/components/landing/Features";
+import CalloutBanner from "@/components/landing/CalloutBanner";
 import PainSection from "@/components/landing/PainSection";
 import DemoSection from "@/components/landing/DemoSection";
 import TrustSection from "@/components/landing/TrustSection";
