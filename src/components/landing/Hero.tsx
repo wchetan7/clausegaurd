@@ -28,12 +28,36 @@ const Hero = ({ onStartTrial }: HeroProps) => {
           Works with SaaS, service agreements, MSAs, and more.
         </p>
 
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          ContractOwl scans your vendor contracts and shows your total committed spend, cancel-by dates, auto-renewal risks, and exactly how much is at risk of locking you in — so nothing catches you off guard.
+        <p className="text-sm text-muted-foreground mb-3 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+          See your cancel-by dates, auto-renewal risks, and total vendor spend — instantly.
         </p>
 
+        <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.15s" }}>
+          <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>
+            Scan My First Contract Free — No Signup
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+
+        <p className="text-sm text-muted-foreground mt-4 mb-8 animate-slide-up" style={{ animationDelay: "0.2s" }}>
+          Upload a PDF. Get your risk report in 60 seconds. No account needed.
+        </p>
+
+        {/* Trust Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-0 mb-10 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+          {trustItems.map((item, i) => (
+            <div key={item.label} className="flex items-center gap-1.5 text-xs text-muted-foreground/70 px-3">
+              <item.icon className="h-3.5 w-3.5" />
+              <span>{item.label}</span>
+              {i < trustItems.length - 1 && (
+                <span className="hidden md:inline ml-3 text-border">|</span>
+              )}
+            </div>
+          ))}
+        </div>
+
         {/* Stat bar */}
-        <div className="flex items-center justify-center gap-4 md:gap-6 mb-8 animate-slide-up" style={{ animationDelay: "0.15s" }}>
+        <div className="flex items-center justify-center gap-4 md:gap-6 animate-slide-up" style={{ animationDelay: "0.4s" }}>
           <div className="text-center">
             <span className="text-xl md:text-2xl font-black text-primary">$2.4M+</span>
             <p className="text-xs text-muted-foreground">vendor spend tracked</p>
@@ -48,28 +72,6 @@ const Hero = ({ onStartTrial }: HeroProps) => {
             <span className="text-xl md:text-2xl font-black text-primary">50+</span>
             <p className="text-xs text-muted-foreground">founders and ops teams</p>
           </div>
-        </div>
-
-        <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.2s" }}>
-          <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>
-            Scan Your First Contract Free
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-
-        <p className="text-sm text-muted-foreground mt-4 mb-8">No signup needed. Results in 60 seconds.</p>
-
-        {/* Trust Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-          {trustItems.map((item, i) => (
-            <div key={item.label} className="flex items-center gap-1.5 text-xs text-muted-foreground/70 px-3">
-              <item.icon className="h-3.5 w-3.5" />
-              <span>{item.label}</span>
-              {i < trustItems.length - 1 && (
-                <span className="hidden md:inline ml-3 text-border">|</span>
-              )}
-            </div>
-          ))}
         </div>
       </div>
     </section>
