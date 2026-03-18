@@ -18,7 +18,7 @@ const Footer = () => {
           </div>
         </div>
         <p className="text-xs text-muted-foreground text-center mt-6">
-          ContractOwl — Vendor Cost Control for Small Business | SOC 2 in progress
+          ContractOwl — Know What Your Vendors Are Actually Costing You | SOC 2 in progress
         </p>
       </div>
     </footer>

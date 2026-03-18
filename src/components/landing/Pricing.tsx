@@ -102,7 +102,10 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
           ))}
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-8">
+        <p className="text-center text-sm text-muted-foreground mt-8">
+          Trusted by 50+ founders and ops teams. Average user finds $12,000+ in at-risk vendor spend in their first scan.
+        </p>
+        <p className="text-center text-xs text-muted-foreground/60 mt-2">
           Your contracts are processed by Claude AI and never used for model training.
         </p>
       </div>

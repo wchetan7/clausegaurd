@@ -1,9 +1,9 @@
 import { Zap, TrendingUp, CalendarClock } from "lucide-react";
 
 const metrics = [
-  { icon: Zap, label: "60 seconds to scan a contract" },
-  { icon: TrendingUp, label: "12-month cost projection per vendor" },
-  { icon: CalendarClock, label: "Cancel-by date flagged automatically" },
+  { icon: Zap, label: "Know your total vendor spend in 60 seconds" },
+  { icon: TrendingUp, label: "Cancel-by dates flagged before you're locked in" },
+  { icon: CalendarClock, label: "See exactly how much MRR is at risk of auto-renewing" },
 ];
 
 const MetricsBar = () => {
