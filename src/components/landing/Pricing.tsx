@@ -91,6 +91,13 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
                     {f}
                   </li>
                 ))}
+                {"comingSoon" in plan && (plan as any).comingSoon?.map((f: string) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                    <Check className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+                    <span>{f}</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Soon</span>
+                  </li>
+                ))}
               </ul>
               <Button
                 variant={plan.popular ? "default" : "outline"}
