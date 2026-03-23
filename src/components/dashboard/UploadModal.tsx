@@ -258,7 +258,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
               </Button>
             </form>
           </>
-        )}
+        ) : null}
 
         {(stage === "uploading" || stage === "extracting" || stage === "analyzing") && (
           <div className="py-16 text-center">
