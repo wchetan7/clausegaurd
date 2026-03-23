@@ -28,7 +28,8 @@ const plans = [
     price: "$149",
     period: "/mo",
     description: "For teams that handle many vendors",
-    features: ["Everything in Pro", "Team sharing 🔜", "Custom rules 🔜", "API access 🔜", "Vendor spend dashboard", "Dedicated CSM"],
+    features: ["Everything in Pro", "Vendor spend dashboard", "Dedicated CSM"],
+    comingSoon: ["Team sharing", "Custom rules", "API access"],
     popular: false,
   },
 ];
