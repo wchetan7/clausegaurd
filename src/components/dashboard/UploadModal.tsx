@@ -22,8 +22,10 @@ interface UploadModalProps {
 type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
 
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
-  
   const [stage, setStage] = useState<Stage>("form");
+  const [limitReached, setLimitReached] = useState(false);
+  const [contractCount, setContractCount] = useState(0);
+  const [planLimit, setPlanLimit] = useState(3);
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
   const [ownerName, setOwnerName] = useState("");
