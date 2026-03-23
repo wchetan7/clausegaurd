@@ -28,7 +28,8 @@ const plans = [
     price: "$149",
     period: "/mo",
     description: "For teams that handle many vendors",
-    features: ["Everything in Pro", "Team sharing 🔜", "Custom rules 🔜", "API access 🔜", "Vendor spend dashboard", "Dedicated CSM"],
+    features: ["Everything in Pro", "Vendor spend dashboard", "Dedicated CSM"],
+    comingSoon: ["Team sharing", "Custom rules", "API access"],
     popular: false,
   },
 ];
@@ -88,6 +89,13 @@ const Pricing = ({ onStartTrial }: PricingProps) => {
                   <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Check className="h-4 w-4 text-primary shrink-0" />
                     {f}
+                  </li>
+                ))}
+                {"comingSoon" in plan && (plan as any).comingSoon?.map((f: string) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                    <Check className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+                    <span>{f}</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Soon</span>
                   </li>
                 ))}
               </ul>

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -22,8 +22,10 @@ interface UploadModalProps {
 type Stage = "form" | "uploading" | "extracting" | "analyzing" | "success" | "error";
 
 const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSuccess }: UploadModalProps) => {
-  
   const [stage, setStage] = useState<Stage>("form");
+  const [limitReached, setLimitReached] = useState(false);
+  const [contractCount, setContractCount] = useState(0);
+  const [planLimit, setPlanLimit] = useState(3);
   const [name, setName] = useState("");
   const [vendor, setVendor] = useState("");
   const [ownerName, setOwnerName] = useState("");
@@ -48,6 +50,26 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     setContractId(null);
     setErrorMsg("");
   };
+
+  // Check plan limits when modal opens
+  useEffect(() => {
+    if (open && userPlan === "starter") {
+      const checkLimit = async () => {
+        const [{ count }, { data: profile }] = await Promise.all([
+          supabase.from("contracts").select("*", { count: "exact", head: true }).eq("user_id", userId),
+          supabase.from("profiles").select("plan_limit").eq("user_id", userId).single(),
+        ]);
+        const limit = profile?.plan_limit || 3;
+        const current = count || 0;
+        setPlanLimit(limit);
+        setContractCount(current);
+        setLimitReached(current >= limit);
+      };
+      checkLimit();
+    } else {
+      setLimitReached(false);
+    }
+  }, [open, userPlan, userId]);
 
   const handleClose = (val: boolean) => {
     if (!val) reset();
@@ -143,7 +165,25 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-card border-border">
-        {stage === "form" && (
+        {stage === "form" && limitReached ? (
+          <div className="py-12 text-center space-y-4">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10">
+              <AlertTriangle className="h-8 w-8 text-warning" />
+            </div>
+            <h3 className="text-lg font-bold">Contract Limit Reached</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              You've used {contractCount} of {planLimit} contracts on the free plan. Upgrade to Pro for unlimited contracts.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={() => { handleClose(false); window.location.href = "/#pricing"; }}>
+                See Upgrade Options
+              </Button>
+              <Button variant="outline" onClick={() => handleClose(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        ) : stage === "form" ? (
           <>
             <DialogHeader>
               <DialogTitle className="text-xl font-bold">Upload Contract</DialogTitle>
@@ -218,7 +258,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
               </Button>
             </form>
           </>
-        )}
+        ) : null}
 
         {(stage === "uploading" || stage === "extracting" || stage === "analyzing") && (
           <div className="py-16 text-center">
