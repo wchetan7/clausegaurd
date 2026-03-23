@@ -165,7 +165,25 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-card border-border">
-        {stage === "form" && (
+        {stage === "form" && limitReached ? (
+          <div className="py-12 text-center space-y-4">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10">
+              <AlertTriangle className="h-8 w-8 text-warning" />
+            </div>
+            <h3 className="text-lg font-bold">Contract Limit Reached</h3>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              You've used {contractCount} of {planLimit} contracts on the free plan. Upgrade to Pro for unlimited contracts.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Button onClick={() => { handleClose(false); window.location.href = "/#pricing"; }}>
+                See Upgrade Options
+              </Button>
+              <Button variant="outline" onClick={() => handleClose(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        ) : stage === "form" ? (
           <>
             <DialogHeader>
               <DialogTitle className="text-xl font-bold">Upload Contract</DialogTitle>
