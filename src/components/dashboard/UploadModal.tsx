@@ -52,7 +52,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
   };
 
   // Check plan limits when modal opens
-  useState(() => {
+  useEffect(() => {
     if (open && userPlan === "starter") {
       const checkLimit = async () => {
         const [{ count }, { data: profile }] = await Promise.all([
@@ -69,7 +69,7 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     } else {
       setLimitReached(false);
     }
-  });
+  }, [open, userPlan, userId]);
 
   const handleClose = (val: boolean) => {
     if (!val) reset();
