@@ -49,6 +49,26 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     setErrorMsg("");
   };
 
+  // Check plan limits when modal opens
+  useState(() => {
+    if (open && userPlan === "starter") {
+      const checkLimit = async () => {
+        const [{ count }, { data: profile }] = await Promise.all([
+          supabase.from("contracts").select("*", { count: "exact", head: true }).eq("user_id", userId),
+          supabase.from("profiles").select("plan_limit").eq("user_id", userId).single(),
+        ]);
+        const limit = profile?.plan_limit || 3;
+        const current = count || 0;
+        setPlanLimit(limit);
+        setContractCount(current);
+        setLimitReached(current >= limit);
+      };
+      checkLimit();
+    } else {
+      setLimitReached(false);
+    }
+  });
+
   const handleClose = (val: boolean) => {
     if (!val) reset();
     onOpenChange(val);
