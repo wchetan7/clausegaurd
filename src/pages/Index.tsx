@@ -63,7 +63,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header onStartTrial={handleSignupClick} />
       <main>
-        <Hero onStartTrial={handleScanClick} onSignup={handleSignupClick} />
+        <Hero onStartTrial={handleScanClick} onSignup={handleSignupClick} onSampleScan={handleSampleScan} />
         <MetricsBar />
         <HowItWorks />
         <Features />
