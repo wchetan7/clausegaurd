@@ -14,9 +14,9 @@ const trustItems = [
   { icon: Trash2, label: "Delete Anytime" },
 ];
 
-const Hero = ({ onStartTrial }: HeroProps) => {
+const Hero = ({ onStartTrial, onSampleScan }: HeroProps) => {
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden">
+    <section className="relative pt-20 md:pt-32 pb-12 md:pb-20 overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
       <div className="container relative text-center max-w-4xl mx-auto">
