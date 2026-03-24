@@ -33,10 +33,13 @@ const Hero = ({ onStartTrial, onSampleScan }: HeroProps) => {
           See your cancel-by dates, auto-renewal risks, and total vendor spend — instantly.
         </p>
 
-        <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.15s" }}>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-slide-up" style={{ animationDelay: "0.15s" }}>
           <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>
             Scan My First Contract Free — No Signup
             <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button size="lg" variant="outline" className="text-base px-6 h-12" onClick={onSampleScan}>
+            See Sample Audit
           </Button>
         </div>
 

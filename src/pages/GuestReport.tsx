@@ -103,15 +103,14 @@ const GuestReport = () => {
     return () => subscription.unsubscribe();
   }, [saved, toast]);
 
+  useEffect(() => {
+    if (!analysis) {
+      navigate("/", { replace: true });
+    }
+  }, [analysis, navigate]);
+
   if (!analysis) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <p className="text-muted-foreground">No report data found.</p>
-          <Button onClick={() => navigate("/")}>Back to Home</Button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   const riskColor = analysis.risk_score === "High" ? "text-destructive" : analysis.risk_score === "Medium" ? "text-warning" : "text-primary";
