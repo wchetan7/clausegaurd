@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 interface HeroProps {
   onStartTrial: () => void;
   onSignup?: () => void;
+  onSampleScan?: () => void;
 }
 
 const trustItems = [
@@ -13,9 +14,9 @@ const trustItems = [
   { icon: Trash2, label: "Delete Anytime" },
 ];
 
-const Hero = ({ onStartTrial }: HeroProps) => {
+const Hero = ({ onStartTrial, onSampleScan }: HeroProps) => {
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden">
+    <section className="relative pt-20 md:pt-32 pb-12 md:pb-20 overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
       <div className="container relative text-center max-w-4xl mx-auto">
@@ -32,10 +33,13 @@ const Hero = ({ onStartTrial }: HeroProps) => {
           See your cancel-by dates, auto-renewal risks, and total vendor spend — instantly.
         </p>
 
-        <div className="flex items-center justify-center animate-slide-up" style={{ animationDelay: "0.15s" }}>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-slide-up" style={{ animationDelay: "0.15s" }}>
           <Button size="lg" className="text-base px-8 h-12 shadow-glow" onClick={onStartTrial}>
             Scan My First Contract Free — No Signup
             <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button size="lg" variant="outline" className="text-base px-6 h-12" onClick={onSampleScan}>
+            See Sample Audit
           </Button>
         </div>
 
