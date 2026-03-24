@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 interface HeroProps {
   onStartTrial: () => void;
   onSignup?: () => void;
+  onSampleScan?: () => void;
 }
 
 const trustItems = [
