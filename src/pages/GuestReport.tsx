@@ -3,10 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Shield, AlertTriangle, CheckCircle2, Save, X } from "lucide-react";
+import { ArrowLeft, Shield, AlertTriangle, CheckCircle2, X } from "lucide-react";
 import AuthModal from "@/components/AuthModal";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import StickyConversionBar from "@/components/guest-report/StickyConversionBar";
+import SavePromptModal from "@/components/guest-report/SavePromptModal";
+import PostSignupSuccess from "@/components/guest-report/PostSignupSuccess";
 
 const PENDING_CONTRACT_KEY = "contractowl_pending_contract";
 
@@ -39,6 +42,12 @@ const GuestReport = () => {
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signup");
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [savePromptOpen, setSavePromptOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  // Derive cancel-by date from analysis
+  const cancelByDate = analysis?.cancellation_deadline || analysis?.renewal_date || analysis?.expiry_date || null;
 
   // Save contract data to sessionStorage so it persists through auth
   useEffect(() => {
@@ -50,18 +59,21 @@ const GuestReport = () => {
     }
   }, [analysis, contractName]);
 
-  // Listen for auth state changes — auto-save pending contract when user signs in
+  // Listen for auth state changes — auto-save pending contract + create reminders
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if ((event === "SIGNED_IN" || event === "TOKEN_REFRESHED") && session?.user && !saved) {
         const pending = getPendingContract();
         if (pending) {
           try {
+            const userId = session.user.id;
+            setUserName(session.user.email || "");
+
             // Insert contract
             const { data: contract, error: contractError } = await supabase
               .from("contracts")
               .insert({
-                user_id: session.user.id,
+                user_id: userId,
                 name: pending.contractName || "Untitled Contract",
                 vendor: pending.analysis?.vendor || pending.contractName || "Unknown Vendor",
                 risk_score: pending.analysis?.risk_score || "Low",
@@ -70,6 +82,8 @@ const GuestReport = () => {
                 auto_renewal: pending.analysis?.auto_renewal || false,
                 renewal_date: pending.analysis?.renewal_date || null,
                 notice_period_days: pending.analysis?.notice_period_days || null,
+                cancellation_deadline: pending.analysis?.cancellation_deadline || null,
+                expiry_date: pending.analysis?.expiry_date || null,
               })
               .select("id")
               .single();
@@ -89,9 +103,33 @@ const GuestReport = () => {
               await supabase.from("contract_clauses").insert(clauseRows);
             }
 
+            // Auto-create reminders at 90, 60, 30 days before cancel-by date
+            const cbDate = pending.analysis?.cancellation_deadline || pending.analysis?.expiry_date || pending.analysis?.renewal_date;
+            if (contract && cbDate) {
+              const target = new Date(cbDate);
+              const reminderDays = [90, 60, 30];
+              const reminderRows = reminderDays
+                .map((days) => {
+                  const d = new Date(target);
+                  d.setDate(d.getDate() - days);
+                  return d > new Date() ? {
+                    user_id: userId,
+                    contract_id: contract.id,
+                    reminder_date: d.toISOString().split("T")[0],
+                    type: "cancellation_deadline",
+                  } : null;
+                })
+                .filter(Boolean);
+              if (reminderRows.length > 0) {
+                await supabase.from("reminders").insert(reminderRows as any);
+              }
+            }
+
             clearPendingContract();
             setSaved(true);
-            toast({ title: "✅ Contract saved to your account", description: "View it anytime from your dashboard." });
+            setSuccessOpen(true);
+            setSavePromptOpen(false);
+            toast({ title: "✅ Contract saved to your account", description: "3 reminders set before your cancel-by date." });
           } catch (err: any) {
             console.error("Failed to save pending contract:", err);
             toast({ title: "Couldn't auto-save contract", description: err.message, variant: "destructive" });
@@ -109,9 +147,7 @@ const GuestReport = () => {
     }
   }, [analysis, navigate]);
 
-  if (!analysis) {
-    return null;
-  }
+  if (!analysis) return null;
 
   const riskColor = analysis.risk_score === "High" ? "text-destructive" : analysis.risk_score === "Medium" ? "text-warning" : "text-primary";
 
@@ -120,8 +156,12 @@ const GuestReport = () => {
     setAuthOpen(true);
   };
 
+  const handleStickyClick = () => {
+    setSavePromptOpen(true);
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-16">
       <header className="border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="container flex h-16 items-center gap-4">
           <Button variant="ghost" size="sm" onClick={() => navigate("/")}>
@@ -135,24 +175,16 @@ const GuestReport = () => {
         </div>
       </header>
 
-      {/* Sticky save banner for guests */}
+      {/* Sticky save banner */}
       {!bannerDismissed && !saved && (
         <div className="sticky top-0 z-40 bg-primary/10 border-b border-primary/20 backdrop-blur-md">
           <div className="container flex items-center justify-between py-3 gap-4">
-            <div className="flex items-center gap-3">
-              <Save className="h-4 w-4 text-primary shrink-0" />
-              <p className="text-sm font-medium text-foreground">
-                💾 Save your results — Sign up free to track this contract and all future renewals
-              </p>
-            </div>
+            <p className="text-sm font-medium text-foreground">
+              💾 Save your results — Sign up free to track this contract and all future renewals
+            </p>
             <div className="flex items-center gap-2 shrink-0">
-              <Button size="sm" onClick={() => openAuth("signup")}>
-                Sign Up Free
-              </Button>
-              <button
-                onClick={() => setBannerDismissed(true)}
-                className="text-muted-foreground hover:text-foreground transition-colors p-1"
-              >
+              <Button size="sm" onClick={() => setSavePromptOpen(true)}>Sign Up Free</Button>
+              <button onClick={() => setBannerDismissed(true)} className="text-muted-foreground hover:text-foreground p-1">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -164,12 +196,8 @@ const GuestReport = () => {
         <div className="sticky top-0 z-40 bg-primary/10 border-b border-primary/20 backdrop-blur-md">
           <div className="container flex items-center gap-3 py-3">
             <CheckCircle2 className="h-4 w-4 text-primary" />
-            <p className="text-sm font-medium text-foreground">
-              Contract saved to your account!
-            </p>
-            <Button size="sm" variant="outline" onClick={() => navigate("/dashboard")} className="ml-auto">
-              Go to Dashboard
-            </Button>
+            <p className="text-sm font-medium text-foreground">Contract saved to your account!</p>
+            <Button size="sm" variant="outline" onClick={() => navigate("/dashboard")} className="ml-auto">Go to Dashboard</Button>
           </div>
         </div>
       )}
@@ -180,9 +208,7 @@ const GuestReport = () => {
             <h1 className="text-2xl font-black">{contractName}</h1>
             <p className="text-sm text-muted-foreground">Free scan report</p>
           </div>
-          <div className={`text-2xl font-black ${riskColor}`}>
-            {analysis.risk_score} Risk
-          </div>
+          <div className={`text-2xl font-black ${riskColor}`}>{analysis.risk_score} Risk</div>
         </div>
 
         <div className="grid gap-4">
@@ -212,26 +238,43 @@ const GuestReport = () => {
           })}
         </div>
 
-        {/* CTA card — opens modal instead of navigating */}
+        {/* CTA card */}
         {!saved && (
           <Card className="bg-primary/5 border-primary/20">
             <CardContent className="py-6 text-center space-y-3">
               <h3 className="font-bold text-lg">Want to save reports & get renewal reminders?</h3>
               <p className="text-sm text-muted-foreground">Sign up to track contracts, get email alerts, and export PDF reports.</p>
               <div className="flex items-center justify-center gap-3">
-                <Button onClick={() => openAuth("signup")} size="lg">
-                  Sign Up Free →
-                </Button>
-                <Button onClick={() => openAuth("signin")} variant="outline" size="lg">
-                  Sign In
-                </Button>
+                <Button onClick={() => setSavePromptOpen(true)} size="lg">Save My Contract — Free →</Button>
+                <Button onClick={() => openAuth("signin")} variant="outline" size="lg">Sign In</Button>
               </div>
             </CardContent>
           </Card>
         )}
       </main>
 
-      {/* Auth modal overlay — stays on same page */}
+      {/* Sticky bottom conversion bar */}
+      {!saved && <StickyConversionBar cancelByDate={cancelByDate} onSaveClick={handleStickyClick} />}
+
+      {/* Save prompt modal */}
+      <SavePromptModal
+        open={savePromptOpen}
+        onOpenChange={setSavePromptOpen}
+        onSignInClick={() => { setSavePromptOpen(false); openAuth("signin"); }}
+        onSignupComplete={() => {}}
+      />
+
+      {/* Post-signup success */}
+      <PostSignupSuccess
+        open={successOpen}
+        onOpenChange={setSuccessOpen}
+        contractName={contractName || ""}
+        cancelByDate={cancelByDate}
+        riskScore={analysis?.risk_score}
+        userName={userName}
+      />
+
+      {/* Fallback auth modal */}
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
     </div>
   );
