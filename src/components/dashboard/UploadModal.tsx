@@ -166,20 +166,28 @@ const UploadModal = ({ open, onOpenChange, userId, userPlan = "starter", onSucce
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg bg-card border-border">
         {stage === "form" && limitReached ? (
-          <div className="py-12 text-center space-y-4">
+          <div className="py-8 text-center space-y-4">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10">
               <AlertTriangle className="h-8 w-8 text-warning" />
             </div>
-            <h3 className="text-lg font-bold">Contract Limit Reached</h3>
+            <h3 className="text-xl font-black">
+              You've tracked {contractCount} contracts
+            </h3>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              You've used {contractCount} of {planLimit} contracts on the free plan. Upgrade to Pro for unlimited contracts.
+              Upgrade to Pro to track unlimited contracts, see your full vendor spend dashboard, and get AI-generated cancellation letters and negotiation emails.
             </p>
-            <div className="flex gap-3 justify-center">
-              <Button onClick={() => { handleClose(false); window.location.href = "/#pricing"; }}>
-                See Upgrade Options
+            <div className="text-center space-y-1">
+              <p className="text-lg font-black">Pro — $59/month</p>
+              <p className="text-xs text-muted-foreground">
+                Cancel anytime. No auto-renewal without your approval — we know how that feels. 😄
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button className="w-full font-bold" size="lg" onClick={() => { handleClose(false); window.location.href = "/#pricing"; }}>
+                Upgrade to Pro →
               </Button>
-              <Button variant="outline" onClick={() => handleClose(false)}>
-                Close
+              <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => handleClose(false)}>
+                Maybe later
               </Button>
             </div>
           </div>
